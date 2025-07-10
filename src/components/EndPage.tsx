@@ -1,203 +1,124 @@
-import React, { useEffect } from 'react';
-import { Button } from './ui/button';
-import { Trophy, Star, RefreshCw, Home, Award } from 'lucide-react';
-import { QuizAnswer } from '../types/Book';
+import React from 'react';
+import { Home, Trophy, Star, Heart, Sparkles, RotateCcw } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import Confetti from 'react-confetti';
 
-interface EndPageProps {
-  bookTitle: string;
-  quizAnswers: QuizAnswer[];
-  totalScore: number;
-  totalPossible: number;
-  onReturnToLibrary: () => void;
-  onRestartBook: () => void;
+interface QuizAnswer {
+  pageTitle: string;
+  multipleChoiceQuestion: string;
+  multipleChoiceAnswer: string;
+  spellingWord: string;
+  spellingAnswer: string;
+  isCorrect: boolean;
 }
 
-const EndPage: React.FC<EndPageProps> = ({
-  bookTitle,
-  quizAnswers,
-  totalScore,
-  totalPossible,
-  onReturnToLibrary,
-  onRestartBook
-}) => {
-  const percentage = Math.round((totalScore / totalPossible) * 100);
-  const isPerfectScore = totalScore === totalPossible;
-  const isGoodScore = percentage >= 70;
+interface EndPageProps {
+  onReturnToLanding: () => void;
+  quizAnswers: QuizAnswer[];
+  totalScore: number;
+  maxScore: number;
+}
 
-  useEffect(() => {
-    // Celebrate completion
-    if (isPerfectScore) {
-      // Big celebration for perfect score
-      confetti({
-        particleCount: 200,
-        spread: 100,
-        origin: { y: 0.6 }
-      });
-      
-      setTimeout(() => {
-        confetti({
-          particleCount: 150,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0 }
-        });
-      }, 300);
-      
-      setTimeout(() => {
-        confetti({
-          particleCount: 150,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1 }
-        });
-      }, 600);
-    } else if (isGoodScore) {
-      // Moderate celebration for good score
+const EndPage = ({ onReturnToLanding, quizAnswers, totalScore, maxScore }: EndPageProps) => {
+  React.useEffect(() => {
+    // Celebrate completion with confetti
+    const timer = setTimeout(() => {
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 }
       });
-    }
-  }, [isPerfectScore, isGoodScore]);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const getScoreMessage = () => {
-    if (isPerfectScore) {
-      return {
-        title: "Perfect! Outstanding Work! 🌟",
-        message: "You got every question right! You're an amazing reader and learner!",
-        color: "text-success"
-      };
-    } else if (isGoodScore) {
-      return {
-        title: "Great Job! Well Done! 👏",
-        message: "You did really well! Keep practicing and you'll get even better!",
-        color: "text-primary"
-      };
-    } else {
-      return {
-        title: "Good Try! Keep Learning! 💪",
-        message: "Every story makes you smarter! Let's try again and learn together!",
-        color: "text-warning"
-      };
-    }
+    const percentage = (totalScore / maxScore) * 100;
+    if (percentage === 100) return "Perfect! You're a reading superstar! 🌟";
+    if (percentage >= 80) return "Excellent work! You did amazing! 🎉";
+    if (percentage >= 60) return "Great job! Keep practicing! 💪";
+    return "Good try! Every adventure teaches us something! 📚";
   };
 
-  const scoreMessage = getScoreMessage();
+  const getScoreColor = () => {
+    const percentage = (totalScore / maxScore) * 100;
+    if (percentage === 100) return "from-yellow-400 to-orange-400";
+    if (percentage >= 80) return "from-green-400 to-blue-400";
+    if (percentage >= 60) return "from-blue-400 to-purple-400";
+    return "from-purple-400 to-pink-400";
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-primary/10 relative overflow-hidden">
-      {/* Confetti Animation */}
-      {isPerfectScore && (
-        <Confetti
-          width={window.innerWidth}
-          height={window.innerHeight}
-          recycle={false}
-          numberOfPieces={200}
-          gravity={0.3}
-        />
-      )}
+    <div className="min-h-screen bg-gradient-to-br from-green-200 via-blue-200 to-purple-200 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Floating decorative elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Trophy className="absolute top-10 left-10 text-yellow-500 w-12 h-12 animate-bounce" />
+        <Star className="absolute top-20 right-20 text-yellow-400 w-8 h-8 animate-pulse" />
+        <Heart className="absolute bottom-20 left-20 text-pink-400 w-10 h-10 animate-bounce" />
+        <Sparkles className="absolute bottom-10 right-10 text-purple-400 w-9 h-9 animate-spin" />
+        <Star className="absolute top-1/2 left-5 text-blue-400 w-6 h-6 animate-pulse" />
+        <Heart className="absolute top-1/3 right-5 text-red-400 w-7 h-7 animate-bounce" />
+      </div>
 
-      <div className="max-w-4xl mx-auto p-6 pt-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-magic mb-6 shadow-magic">
-            <Trophy className="w-10 h-10 text-white" />
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-magic bg-clip-text text-transparent">
-            Story Complete!
+      <div className="max-w-6xl mx-auto text-center space-y-8 animate__animated animate__fadeIn">
+        {/* THE END Title */}
+        <div className="space-y-4">
+          <h1 className="text-7xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 animate__animated animate__bounceIn"
+              style={{ 
+                fontFamily: 'Comic Sans MS, Chalkboard SE, Arial, sans-serif',
+                textShadow: '3px 3px 0px rgba(255,255,255,0.8)'
+              }}>
+            THE END
           </h1>
           
-          <p className="text-xl text-muted-foreground">
-            You finished "<span className="font-semibold text-foreground">{bookTitle}</span>"
+          <div className="text-4xl md:text-6xl animate__animated animate__zoomIn animate__delay-1s">
+            🎉 🌟 🎊
+          </div>
+        </div>
+
+        {/* Score Summary */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-4 border-yellow-300 animate__animated animate__slideInUp animate__delay-2s">
+          <div className={`text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${getScoreColor()} mb-4`}
+               style={{ fontFamily: 'Comic Sans MS, Chalkboard SE, Arial, sans-serif' }}>
+            Your Final Score: {totalScore}/{maxScore}
+          </div>
+          <p className="text-2xl md:text-3xl text-purple-700 font-bold"
+             style={{ fontFamily: 'Comic Sans MS, Chalkboard SE, Arial, sans-serif' }}>
+            {getScoreMessage()}
           </p>
         </div>
 
-        {/* Score Card */}
-        <div className="bg-card/90 backdrop-blur-sm rounded-2xl book-shadow p-8 mb-8">
-          <div className="text-center mb-8">
-            <div className={`text-2xl md:text-3xl font-bold mb-2 ${scoreMessage.color}`}>
-              {scoreMessage.title}
-            </div>
-            <p className="text-lg text-muted-foreground mb-6">
-              {scoreMessage.message}
-            </p>
-
-            {/* Score Display */}
-            <div className="inline-flex items-center gap-4 bg-primary/10 rounded-2xl p-6">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-primary mb-1">
-                  {totalScore}
-                </div>
-                <div className="text-sm text-muted-foreground">Correct</div>
-              </div>
-              <div className="text-2xl text-muted-foreground">of</div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-primary mb-1">
-                  {totalPossible}
-                </div>
-                <div className="text-sm text-muted-foreground">Total</div>
-              </div>
-              <div className="text-center ml-4">
-                <div className="text-3xl font-bold text-primary mb-1">
-                  {percentage}%
-                </div>
-                <div className="text-sm text-muted-foreground">Score</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Achievement Badges */}
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            {isPerfectScore && (
-              <div className="flex items-center gap-2 bg-success/10 text-success px-4 py-2 rounded-full">
-                <Star className="w-5 h-5" />
-                <span className="font-medium">Perfect Score!</span>
-              </div>
-            )}
-            
-            {isGoodScore && (
-              <div className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full">
-                <Award className="w-5 h-5" />
-                <span className="font-medium">Great Reader!</span>
-              </div>
-            )}
-            
-            <div className="flex items-center gap-2 bg-accent/10 text-accent-foreground px-4 py-2 rounded-full">
-              <Trophy className="w-5 h-5" />
-              <span className="font-medium">Story Explorer</span>
-            </div>
-          </div>
-
-          {/* Quiz Summary */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-center mb-4">Your Quiz Results:</h3>
+        {/* Quiz Summary */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-4 border-blue-300 animate__animated animate__slideInUp animate__delay-3s">
+          <h2 className="text-3xl md:text-4xl font-bold text-purple-700 mb-6"
+              style={{ fontFamily: 'Comic Sans MS, Chalkboard SE, Arial, sans-serif' }}>
+            📝 Your Adventure Summary
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-96 overflow-y-auto">
             {quizAnswers.map((answer, index) => (
-              <div 
-                key={index}
-                className={`p-4 rounded-xl border-2 ${
-                  answer.isCorrect
-                    ? 'border-success/30 bg-success/5'
-                    : 'border-warning/30 bg-warning/5'
-                }`}
-              >
-                <div className="flex items-start gap-3">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                    answer.isCorrect
-                      ? 'bg-success text-white'
-                      : 'bg-warning text-white'
-                  }`}>
-                    {answer.isCorrect ? '✓' : '✗'}
+              <div key={index} className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6 border-2 border-purple-200 shadow-lg">
+                <h3 className="text-xl font-bold text-purple-800 mb-4 flex items-center gap-2"
+                    style={{ fontFamily: 'Comic Sans MS, Chalkboard SE, Arial, sans-serif' }}>
+                  📖 {answer.pageTitle}
+                  {answer.isCorrect ? (
+                    <span className="text-green-500 text-2xl">✅</span>
+                  ) : (
+                    <span className="text-orange-500 text-2xl">⭐</span>
+                  )}
+                </h3>
+                
+                <div className="space-y-3 text-left">
+                  <div className="bg-white/70 rounded-lg p-3">
+                    <p className="text-sm font-semibold text-purple-600">Multiple Choice:</p>
+                    <p className="text-sm text-gray-700">{answer.multipleChoiceQuestion}</p>
+                    <p className="text-sm font-medium text-purple-800">Your answer: {answer.multipleChoiceAnswer}</p>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium text-sm mb-1">{answer.pageTitle}</div>
-                    <div className="text-sm text-muted-foreground">
-                      Spelling: <span className="font-medium">{answer.spellingAnswer}</span>
-                      {answer.isCorrect ? ' ✓' : ` (${answer.spellingWord})`}
-                    </div>
+                  
+                  <div className="bg-white/70 rounded-lg p-3">
+                    <p className="text-sm font-semibold text-purple-600">Spelling Challenge:</p>
+                    <p className="text-sm text-gray-700">Word: "{answer.spellingWord}"</p>
+                    <p className="text-sm font-medium text-purple-800">Your spelling: {answer.spellingAnswer}</p>
                   </div>
                 </div>
               </div>
@@ -205,36 +126,50 @@ const EndPage: React.FC<EndPageProps> = ({
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            onClick={onReturnToLibrary}
-            size="lg"
-            className="btn-magic text-white border-0 gap-2"
-          >
-            <Home className="w-5 h-5" />
-            Choose New Story
-          </Button>
-          
-          <Button
-            onClick={onRestartBook}
-            variant="outline"
-            size="lg"
-            className="gap-2"
-          >
-            <RefreshCw className="w-5 h-5" />
-            Read Again
-          </Button>
+        {/* Congratulations Message */}
+        <div className="bg-gradient-to-r from-yellow-200 via-pink-200 to-purple-200 rounded-3xl p-8 shadow-2xl border-4 border-rainbow animate__animated animate__slideInUp animate__delay-4s">
+          <div className="text-6xl mb-4">🏆</div>
+          <h3 className="text-3xl md:text-4xl font-bold text-purple-700 mb-4"
+              style={{ fontFamily: 'Comic Sans MS, Chalkboard SE, Arial, sans-serif' }}>
+            Congratulations, Reading Hero!
+          </h3>
+          <p className="text-xl md:text-2xl text-purple-600 leading-relaxed"
+             style={{ fontFamily: 'Comic Sans MS, Chalkboard SE, Arial, sans-serif' }}>
+            You've completed Hoppy's amazing adventure! You learned about friendship, 
+            helping others, and had fun with reading. You're ready for more adventures! 🌟
+          </p>
         </div>
 
-        {/* Encouragement Message */}
-        <div className="text-center mt-12 p-6 bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl">
-          <p className="text-lg font-medium text-primary mb-2">
-            🎉 Keep Reading, Keep Growing! 🎉
-          </p>
-          <p className="text-muted-foreground">
-            Every story you read makes you smarter and more curious about the world!
-          </p>
+        {/* Return to Landing Button */}
+        <button
+          onClick={onReturnToLanding}
+          className="group relative px-12 py-6 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white text-2xl md:text-3xl font-bold rounded-full shadow-2xl transform transition-all duration-300 hover:scale-110 hover:shadow-3xl animate__animated animate__pulse animate__infinite animate__delay-5s"
+          style={{ fontFamily: 'Comic Sans MS, Chalkboard SE, Arial, sans-serif' }}
+        >
+          <div className="flex items-center gap-4">
+            <Home size={32} className="group-hover:animate-bounce" />
+            <span>New Adventure!</span>
+            <RotateCcw size={28} className="group-hover:animate-spin" />
+          </div>
+          
+          {/* Button glow effect */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 opacity-0 group-hover:opacity-50 transition-opacity duration-300 blur-xl"></div>
+        </button>
+
+        {/* Fun achievement badges */}
+        <div className="flex flex-wrap justify-center gap-4 animate__animated animate__fadeInUp animate__delay-6s">
+          <div className="bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+            🏅 Story Completed
+          </div>
+          <div className="bg-pink-400 text-pink-900 px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+            🧠 Quiz Master
+          </div>
+          <div className="bg-blue-400 text-blue-900 px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+            📚 Reading Champion
+          </div>
+          <div className="bg-green-400 text-green-900 px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+            ⭐ Adventure Hero
+          </div>
         </div>
       </div>
     </div>

@@ -1,177 +1,167 @@
-@import 'animate.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Kids Book Interactive Design System - Playful & Educational */
-
-@layer base {
-  :root {
-    /* Kid-friendly rainbow theme */
-    --background: 240 100% 99%;
-    --foreground: 230 25% 25%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 230 25% 25%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 230 25% 25%;
-
-    /* Vibrant primary colors for engagement */
-    --primary: 280 100% 70%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 280 100% 85%;
-
-    --secondary: 200 100% 90%;
-    --secondary-foreground: 200 100% 20%;
-
-    --muted: 220 15% 96%;
-    --muted-foreground: 220 10% 50%;
-
-    /* Fun accent colors */
-    --accent: 45 100% 70%;
-    --accent-foreground: 45 100% 15%;
-
-    --success: 120 100% 40%;
-    --success-foreground: 0 0% 100%;
-
-    --warning: 35 100% 60%;
-    --warning-foreground: 35 100% 10%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 220 15% 90%;
-    --input: 220 15% 94%;
-    --ring: 280 100% 70%;
-
-    --radius: 1rem;
-
-    /* Custom gradients for magical feel */
-    --gradient-magic: linear-gradient(135deg, hsl(280 100% 70%), hsl(320 100% 75%), hsl(260 100% 80%));
-    --gradient-sunset: linear-gradient(135deg, hsl(25 100% 70%), hsl(45 100% 65%), hsl(35 100% 75%));
-    --gradient-ocean: linear-gradient(135deg, hsl(200 100% 70%), hsl(220 100% 75%), hsl(240 100% 80%));
-    --gradient-forest: linear-gradient(135deg, hsl(120 50% 60%), hsl(150 60% 65%), hsl(100 55% 70%));
-
-    /* Playful shadows */
-    --shadow-soft: 0 4px 20px hsl(280 100% 70% / 0.15);
-    --shadow-magic: 0 8px 30px hsl(280 100% 70% / 0.25);
-    --shadow-book: 0 10px 40px hsl(0 0% 0% / 0.1);
-
-    /* Animation variables */
-    --bounce-timing: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --smooth-timing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  .dark {
-    --background: 230 25% 8%;
-    --foreground: 240 100% 95%;
-
-    --card: 230 25% 12%;
-    --card-foreground: 240 100% 95%;
-
-    --popover: 230 25% 12%;
-    --popover-foreground: 240 100% 95%;
-
-    --primary: 280 100% 75%;
-    --primary-foreground: 230 25% 8%;
-    --primary-glow: 280 100% 60%;
-
-    --secondary: 200 50% 20%;
-    --secondary-foreground: 200 100% 85%;
-
-    --muted: 230 25% 15%;
-    --muted-foreground: 230 15% 65%;
-
-    --accent: 45 100% 65%;
-    --accent-foreground: 230 25% 8%;
-
-    --success: 120 80% 50%;
-    --success-foreground: 230 25% 8%;
-
-    --border: 230 25% 20%;
-    --input: 230 25% 18%;
-    --ring: 280 100% 75%;
-
-    /* Dark mode gradients */
-    --gradient-magic: linear-gradient(135deg, hsl(280 100% 60%), hsl(320 80% 65%), hsl(260 90% 70%));
-    --gradient-sunset: linear-gradient(135deg, hsl(25 80% 55%), hsl(45 90% 50%), hsl(35 85% 60%));
-    --gradient-ocean: linear-gradient(135deg, hsl(200 80% 50%), hsl(220 90% 55%), hsl(240 85% 60%));
-    --gradient-forest: linear-gradient(135deg, hsl(120 40% 45%), hsl(150 50% 50%), hsl(100 45% 55%));
-  }
+:root {
+  --primary: #8A4FFF;
+  --secondary: #FF6B6B;
+  --accent: #4ECDC4;
+  --background: #F9F7FF;
+  --text: #333333;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+body {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+}
 
-  body {
-    @apply bg-background text-foreground font-sans overflow-x-hidden;
-    background: linear-gradient(135deg, hsl(var(--background)), hsl(240 100% 98%));
-    min-height: 100vh;
-  }
+/* Custom Animations */
+@keyframes sparkle {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
 
-  /* Reading highlight animation */
-  @keyframes word-highlight {
-    0% { background-color: transparent; }
-    50% { background-color: hsl(var(--accent) / 0.3); }
-    100% { background-color: transparent; }
-  }
+@keyframes grow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
 
-  .word-highlight {
-    animation: word-highlight 0.8s ease-in-out;
-    border-radius: 0.25rem;
-    padding: 0.125rem 0.25rem;
-  }
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
 
-  /* Magical button animations */
-  .btn-magic {
-    background: var(--gradient-magic);
-    transition: all 0.3s var(--bounce-timing);
-  }
+@keyframes float-horizontal {
+  0% { transform: translateX(0px); }
+  50% { transform: translateX(10px); }
+  100% { transform: translateX(0px); }
+}
 
-  .btn-magic:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: var(--shadow-magic);
-  }
+@keyframes bloom {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
 
-  /* Page turn animation */
-  .page-turn-enter {
-    opacity: 0;
-    transform: translateX(50px) rotateY(-15deg);
-  }
+/* Magic Wand Animations */
+@keyframes magicFloat {
+  0% { transform: translateY(0px) rotate(45deg); }
+  25% { transform: translateY(-15px) rotate(50deg); }
+  50% { transform: translateY(-10px) rotate(40deg); }
+  75% { transform: translateY(-20px) rotate(55deg); }
+  100% { transform: translateY(0px) rotate(45deg); }
+}
 
-  .page-turn-enter-active {
-    opacity: 1;
-    transform: translateX(0) rotateY(0deg);
-    transition: all 0.6s var(--smooth-timing);
-  }
+@keyframes sparkleFloat {
+  0% { transform: translateY(0px) translateX(0px) scale(1); opacity: 1; }
+  25% { transform: translateY(-20px) translateX(10px) scale(1.2); opacity: 0.8; }
+  50% { transform: translateY(-15px) translateX(-5px) scale(0.8); opacity: 0.6; }
+  75% { transform: translateY(-25px) translateX(15px) scale(1.1); opacity: 0.9; }
+  100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 1; }
+}
 
-  .page-turn-exit {
-    opacity: 1;
-    transform: translateX(0) rotateY(0deg);
-  }
+.magic-wand-container {
+  animation: magicFloat 3s ease-in-out infinite;
+}
 
-  .page-turn-exit-active {
-    opacity: 0;
-    transform: translateX(-50px) rotateY(15deg);
-    transition: all 0.6s var(--smooth-timing);
-  }
+.sparkle-trail {
+  position: absolute;
+  font-size: 12px;
+  animation: sparkleFloat 2s ease-in-out infinite;
+}
 
-  /* Book cover shadow */
-  .book-shadow {
-    box-shadow: var(--shadow-book);
-  }
+.sparkle-1 {
+  top: -10px;
+  left: -15px;
+  animation-delay: 0s;
+}
 
-  /* Confetti canvas positioning */
-  .confetti-canvas {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw !important;
-    height: 100vh !important;
-    pointer-events: none;
-    z-index: 1000;
-  }
+.sparkle-2 {
+  top: -5px;
+  right: -20px;
+  animation-delay: 0.5s;
+}
+
+.sparkle-3 {
+  bottom: -10px;
+  left: -10px;
+  animation-delay: 1s;
+}
+
+.sparkle-4 {
+  bottom: -5px;
+  right: -15px;
+  animation-delay: 1.5s;
+}
+
+/* Slow fade animation for story images */
+@keyframes slowFadeInOut {
+  0% { opacity: 0; transform: scale(0.95); }
+  10% { opacity: 1; transform: scale(1); }
+  90% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.95); }
+}
+
+.slow-fade-animation {
+  animation: slowFadeInOut 6s ease-in-out;
+}
+
+.animate-sparkle {
+  animation: sparkle 1s infinite;
+}
+
+.animate-grow {
+  animation: grow 2s infinite;
+}
+
+.animate-float {
+  animation: float 3s infinite;
+}
+
+.animate-float-horizontal {
+  animation: float-horizontal 4s infinite;
+}
+
+.animate-bloom {
+  animation: bloom 2.5s infinite;
+}
+
+/* Page turning animation */
+.page-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateX(0%);
+  transition: opacity 500ms, transform 500ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 500ms, transform 500ms;
+}
+
+.fade-in-image {
+  animation: fadeIn 4s;
+  -webkit-animation: fadeIn 4s;
+  -moz-animation: fadeIn 4s;
+  -o-animation: fadeIn 4s;
+  -ms-animation: fadeIn 4s;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
