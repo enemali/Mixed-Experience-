@@ -138,8 +138,8 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
         </div>
       </header>
 
-      {/* Main Content Container */}
-      <div className="flex-1 flex flex-col p-2 sm:p-2 gap-2 max-w-full mx-auto">
+      {/* Main Content Container with margin below*/}
+      <div className="flex-1 flex flex-col p-2 sm:p-2 gap-2 max-w-full px-4 sm:px-6 lg:px-8">
         
         {/* Top Row: Gallery (Horizontal on tablets/phones) */}
         <div className="flex flex-col lg:flex-row gap-3">
@@ -307,9 +307,10 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
         )}
 
         {/* Canvas Section - Responsive Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 flex-1 w-full gap-3 mt-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 flex-1 w-full gap-3">
+
           {/* Drawing Canvas */}
-          <div className="bg-white rounded-xl shadow-lg border border-purple-200 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-lg border border-purple-200 overflow-hidden flex-1">
             <div className="bg-gradient-to-r from-purple-500 to-pink-500">
               <div className="flex items-center justify-between">
                 <h3 className="text-white font-bold text-lg flex items-center gap-2">
@@ -374,6 +375,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 </div>
               )}
             </div>
+            
           </div>
 
           {/* AI Generated Canvas with Color Palette */}
