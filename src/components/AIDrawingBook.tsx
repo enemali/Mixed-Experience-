@@ -449,7 +449,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 {colors.map((color, index) => (
                   <button
                     key={index}
-                    onClick={() => handleColorSelect(color)}
+                    onClick={(e) => handleColorSelect(color, e)}
                     disabled={!hasGeneratedContent}
                     className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 transition-all duration-200 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed ${
                       selectedColor === color ? 'border-gray-800 ring-2 ring-gray-400' : 'border-gray-300'
