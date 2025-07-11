@@ -849,7 +849,7 @@ export const useAIDrawingBookLogic = () => {
 
       // Play background music at a lower volume using local file
       const bgAudio = new Audio('/sounds/pianoSound.mp3');
-      bgAudio.loop = true;
+      bgAudio.loop = true; // Re-added to loop during story reading
       bgAudio.volume = 0.1;
       bgAudioRef.current = bgAudio;
       
@@ -906,13 +906,10 @@ export const useAIDrawingBookLogic = () => {
       audio.onended = () => {
         console.log('🎵 Audio ended - starting cleanup');
         
-        // Stop background music
-        setTimeout(() => {
-          if (bgAudioRef.current) {
-            bgAudioRef.current.pause();
-            bgAudioRef.current.currentTime = 0;
-          }
-        }, 2000);
+        // Stop background music 
+        bgAudioRef.current?.pause();
+        bgAudioRef.current = null;
+        console.log('🎵 Background music stopped');
         
         // Clean up animation and state
         cleanupStoryAnimation();
