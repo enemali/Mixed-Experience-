@@ -910,14 +910,14 @@ export const useAIDrawingBookLogic = () => {
         bgAudioRef.current?.pause();
         bgAudioRef.current = null;
         console.log('🎵 Background music stopped');
-        
+        // play confetti celebration
+        celebrateWithConfetti();
         // Clean up animation and state
         cleanupStoryAnimation();
         
         // Clean up audio resources
         URL.revokeObjectURL(audioUrl);
         audioRef.current = null;
-        
         console.log('✅ Audio cleanup complete');
       };
       
