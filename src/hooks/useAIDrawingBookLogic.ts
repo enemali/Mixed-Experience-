@@ -1135,8 +1135,8 @@ const generateAndDownloadVideo = useCallback(async () => {
     const [storyImageLoaded, sketchImageLoaded, genImageLoaded] = await Promise.all([
       historyItem.storyImageBase64 ? loadImage(`data:image/png;base64,${historyItem.storyImageBase64}`) : Promise.resolve(null),
       loadImage(`data:image/png;base64,${historyItem.sketch}`),
-      loadImage(`data:image/png;base64,${historyItem.generated}`)
-      // loadImage(`data:image/png;base64,${historyItem.storyImageBase64}`)  
+      loadImage(`data:image/png;base64,${historyItem.generated}`),
+      loadImage(`data:image/png;base64,${historyItem.storyImageBase64}`)
       
     ]);
     
