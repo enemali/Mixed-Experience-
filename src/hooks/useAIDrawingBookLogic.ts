@@ -456,11 +456,6 @@ export const useAIDrawingBookLogic = () => {
   );
 
   // Event handlers
-  const handleColoringInteraction = (
-    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
-  ) => {
-    handleColoringInteraction(e);
-  };
 
   // Toggle pen mode function
   const togglePenMode = () => {
@@ -525,7 +520,7 @@ export const useAIDrawingBookLogic = () => {
     }
   };
 
-  const handleColoringInteraction = (
+  const handleColoringClick = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ) => {
     const canvas = coloringCanvasRef.current;
@@ -1467,7 +1462,7 @@ const generateAndDownloadVideo = useCallback(async () => {
     startDrawing,
     drawSketch,
     stopDrawing,
-    handleColoringInteraction,
+    handleColoringClick,
     handleColoringMouseMove,
     handleColoringMouseUp,
     handleColorSelect,
