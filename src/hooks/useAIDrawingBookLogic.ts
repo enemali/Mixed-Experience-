@@ -843,9 +843,9 @@ export const useAIDrawingBookLogic = () => {
       console.error("Error generating story:", err);
       setError(err.message || "The storyteller seems to be napping! Please try again.");
       setStory("");
-      setStoryImageBase64(null);
+      setStoryImageBase64(storyImageBase64);
     } finally {
-      setIsGeneratingStory(false);
+      setIsGeneratingStory(false); 
     }
   };
 
