@@ -318,6 +318,13 @@ export const useAIDrawingBookLogic = () => {
       if (webcamStream) {
         webcamStream.getTracks().forEach((track) => track.stop());
       }
+      // Final safety net for background audio cleanup on unmount
+      if (bgAudioRef.current) {
+        bgAudioRef.current.pause();
+        bgAudioRef.current.currentTime = 0;
+        bgAudioRef.current = null;
+        console.log('🧹 useEffect cleanup: Stopped background music');
+      }
     };
   }, [webcamStream]);
 
@@ -813,6 +820,7 @@ export const useAIDrawingBookLogic = () => {
     console.log('🖼️ Final story image check:', !!currentStoryImage);
     
     try {
+      console.log('🎤 Attempting to generate story audio...');
       let audioBlob: Blob;
       
       if (storytellerType === 'elevenlabs') {
@@ -854,10 +862,16 @@ export const useAIDrawingBookLogic = () => {
       bgAudioRef.current = bgAudio;
       
       // Wait for background music to be ready before playing
+      console.log('🎵 Setting up background music event listeners...');
       bgAudio.oncanplaythrough = () => {
+        console.log('🎵 Background music can play through. Attempting to play...');
         bgAudio.play().catch(e => {
           console.log('Background music play failed:', e);
+          // If autoplay is prevented, explicitly clean up
+          bgAudioRef.current?.pause();
+          bgAudioRef.current = null;
         });
+        console.log('🎵 Background music play initiated.');
       };
       
       bgAudio.onerror = (e) => {
@@ -866,9 +880,13 @@ export const useAIDrawingBookLogic = () => {
       
       // If already loaded, play immediately
       if (bgAudio.readyState >= 3) {
+        console.log('🎵 Background music already loaded. Playing immediately...');
         bgAudio.play().catch(e => {
           console.log('Background music play failed:', e);
+          bgAudioRef.current?.pause();
+          bgAudioRef.current = null;
         });
+        console.log('🎵 Background music play initiated (immediate).');
       }
 
       // STEP 4: Start animation cycle ONLY if we have both story image and generated content
@@ -920,6 +938,7 @@ export const useAIDrawingBookLogic = () => {
       audio.onerror = () => {
         console.log('❌ Audio error - starting cleanup');
         
+        // Ensure background music is stopped if story audio errors
         // Clean up animation and state
         cleanupStoryAnimation();
         
@@ -929,6 +948,7 @@ export const useAIDrawingBookLogic = () => {
     } catch (err) {
       console.log('💥 Error in handleReadStory:', err);
       setError(`Could not generate audio for the story using ${storytellerType}.`);
+      // Ensure background music is stopped if any error occurs before audio playback
       cleanupStoryAnimation();
     }
   };
