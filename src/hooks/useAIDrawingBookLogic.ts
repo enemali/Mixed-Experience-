@@ -36,6 +36,12 @@ export const useAIDrawingBookLogic = () => {
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
   const [selectedColor, setSelectedColor] = useState<string>("#FF0000");
   const [hasGeneratedContent, setHasGeneratedContent] = useState(false);
+  
+  // Pen tool state
+  const [isPenMode, setIsPenMode] = useState(false);
+  const [brushSize, setBrushSize] = useState(8);
+  const [isDrawingOnColoring, setIsDrawingOnColoring] = useState(false);
+  const [lastColoringPos, setLastColoringPos] = useState({ x: 0, y: 0 });
 
   // UI and AI state
   const [currentPrompt, setCurrentPrompt] = useState<string>("");
@@ -450,7 +456,7 @@ export const useAIDrawingBookLogic = () => {
   );
 
   // Event handlers
-  const handleColoringClick = (
+  const handleColoringInteraction = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ) => {
     const canvas = coloringCanvasRef.current;
@@ -460,7 +466,35 @@ export const useAIDrawingBookLogic = () => {
     }
     setError(null);
     const { x, y } = getCanvasPos(canvas, e.nativeEvent);
-    floodFill(x, y, selectedColor);
+    
+    if (isPenMode) {
+      // Start pen drawing
+      setIsDrawingOnColoring(true);
+      setLastColoringPos({ x, y });
+      
+      // Draw initial dot
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = brushSize;
+        
+        // Create glossy effect with gradient
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, brushSize / 2);
+        gradient.addColorStop(0, selectedColor);
+        gradient.addColorStop(0.7, selectedColor + '80'); // Semi-transparent
+        gradient.addColorStop(1, selectedColor + '20'); // Very transparent
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else {
+      // Use flood fill
+      floodFill(x, y, selectedColor);
+    }
 
     // After coloring, save the current state of the coloring canvas to history
     if (selectedHistoryIndex !== null && history[selectedHistoryIndex]) {
