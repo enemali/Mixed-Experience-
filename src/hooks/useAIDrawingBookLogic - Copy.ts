@@ -536,7 +536,7 @@ export const useAIDrawingBookLogic = () => {
       if (isReuse) {
         // Reuse: use previous prompt/description
         const sketchDescription = history[historyIdx!].recognizedImage;
-        const imageGenerationPrompt = `${sketchDescription},coloring book style, line art, no fill, No sexual content , child friendly, black lines, white background`;
+        const imageGenerationPrompt = `${sketchDescription},coloring book style, line art, no fill, No sexual content,no colors, child friendly, black lines, white background`;
         const imageBlob = await PollinationsService.generateImage(imageGenerationPrompt);
         const imageUrl = URL.createObjectURL(imageBlob);
 
