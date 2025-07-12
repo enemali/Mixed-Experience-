@@ -805,7 +805,7 @@ export const useAIDrawingBookLogic = () => {
         const encodedStory = encodeURIComponent(story);
         const voice = "alloy";
         // Add the API key as a query parameter using Bearer token method
-        const url = `https://text.pollinations.ai/'tell a 4 year old kid a moral story about '${encodedStory}?model=openai-audio&voice=${voice}&token=${pollinationsApiKey}`;
+        const url = `https://text.pollinations.ai/'tell 4 year old kid a moral story about '${encodedStory}?model=openai-audio&voice=${voice}&token=${pollinationsApiKey}`;
         const response = await fetch(url);
         if (!response.ok) {
           const errorText = await response.text();
