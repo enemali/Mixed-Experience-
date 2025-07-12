@@ -145,7 +145,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
         <div className="flex flex-col lg:flex-row gap-3">
           
           {/* Gallery Section - Horizontal scroll on mobile/tablet*/}
-          {/* <div className="bg-white rounded-xl shadow-lg p-3 border border-purple-200 lg:min-w-[200px]"> */} 
+          <div className="bg-white rounded-xl shadow-lg p-3 border border-purple-200 lg:min-w-[200px]"> 
             <h3 className="text-lg font-bold text-purple-700 mb-2 text-center lg:text-left">Gallery</h3>
             <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible lg:overflow-y-auto lg:max-h-32">
               {history.length === 0 ? (
