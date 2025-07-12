@@ -111,33 +111,15 @@ export const useAIDrawingBookLogic = () => {
   // Play win sound function
   const playWinSound = () => {
     try {
-      const winAudio = new Audio('/sounds/winSound.mp3');
+      const winAudio = new Audio('https://cdn.pixabay.com/download/audio/2022/01/18/audio_8db1f1b5a5.mp3?filename=snd_fragment_retrievewav-14728.mp3');
       winAudio.volume = 0.5; // Set to 50% volume
-      
-      // Wait for audio to be ready before playing
-      winAudio.oncanplaythrough = () => {
-        winAudio.play().catch(e => {
-          console.log('Win sound play failed:', e);
-        });
-      };
-      
-      winAudio.onerror = (e) => {
-        console.log('Win sound loading failed:', e);
-      };
-      
-      // If already loaded, play immediately
-      if (winAudio.readyState >= 3) {
-        winAudio.play().catch(e => {
-          console.log('Win sound play failed:', e);
-        });
-      }
+      winAudio.play().catch(e => {
+        console.log('Win sound play failed:', e);
+      });
     } catch (error) {
-      console.log('Error creating win sound:', error);
+      console.log('Error playing win sound:', error);
     }
   };
-
-  // Background audio ref for better lifecycle management
-  const bgAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialize FFmpeg
   const loadFFmpeg = useCallback(async () => {
@@ -317,13 +299,6 @@ export const useAIDrawingBookLogic = () => {
       }
       if (webcamStream) {
         webcamStream.getTracks().forEach((track) => track.stop());
-      }
-      // Final safety net for background audio cleanup on unmount
-      if (bgAudioRef.current) {
-        bgAudioRef.current.pause();
-        bgAudioRef.current.currentTime = 0;
-        bgAudioRef.current = null;
-        console.log('🧹 useEffect cleanup: Stopped background music');
       }
     };
   }, [webcamStream]);
@@ -561,7 +536,7 @@ export const useAIDrawingBookLogic = () => {
       if (isReuse) {
         // Reuse: use previous prompt/description
         const sketchDescription = history[historyIdx!].recognizedImage;
-        const imageGenerationPrompt = `${sketchDescription},coloring book style, line art, no fill, No sexual content , child friendly, black lines, white background`;
+        const imageGenerationPrompt = `${sketchDescription},coloring book style, line art, no fill, No sexual content,no colors, child friendly, black lines, white background`;
         const imageBlob = await PollinationsService.generateImage(imageGenerationPrompt);
         const imageUrl = URL.createObjectURL(imageBlob);
 
@@ -757,7 +732,7 @@ export const useAIDrawingBookLogic = () => {
     }
   };
 
-  // Enhanced cleanup function to ensure animation stops
+  // FIXED: Enhanced cleanup function to ensure animation stops
   const cleanupStoryAnimation = useCallback(() => {
     console.log('🧹 Cleaning up story animation');
     
@@ -766,14 +741,6 @@ export const useAIDrawingBookLogic = () => {
       clearInterval(fadeIntervalRef.current);
       fadeIntervalRef.current = null;
       console.log('⏰ Cleared fade interval');
-    }
-    
-    // Stop and cleanup background music
-    if (bgAudioRef.current) {
-      bgAudioRef.current.pause();
-      bgAudioRef.current.currentTime = 0;
-      bgAudioRef.current = null;
-      console.log('🎵 Stopped background music');
     }
     
     // Reset animation state
@@ -820,7 +787,6 @@ export const useAIDrawingBookLogic = () => {
     console.log('🖼️ Final story image check:', !!currentStoryImage);
     
     try {
-      console.log('🎤 Attempting to generate story audio...');
       let audioBlob: Blob;
       
       if (storytellerType === 'elevenlabs') {
@@ -855,39 +821,13 @@ export const useAIDrawingBookLogic = () => {
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
 
-      // Play background music at a lower volume using local file
-      const bgAudio = new Audio('/sounds/pianoSound.mp3');
+      // Play background music at a lower volume
+      const bgMusicUrl =
+        "https://cdn.pixabay.com/download/audio/2025/06/20/audio_f144ebba0c.mp3?filename=babies-piano-45-seconds-362933.mp3";
+      const bgAudio = new Audio(bgMusicUrl);
       bgAudio.loop = true;
       bgAudio.volume = 0.1;
-      bgAudioRef.current = bgAudio;
-      
-      // Wait for background music to be ready before playing
-      console.log('🎵 Setting up background music event listeners...');
-      bgAudio.oncanplaythrough = () => {
-        console.log('🎵 Background music can play through. Attempting to play...');
-        bgAudio.play().catch(e => {
-          console.log('Background music play failed:', e);
-          // If autoplay is prevented, explicitly clean up
-          bgAudioRef.current?.pause();
-          bgAudioRef.current = null;
-        });
-        console.log('🎵 Background music play initiated.');
-      };
-      
-      bgAudio.onerror = (e) => {
-        console.log('Background music loading failed:', e);
-      };
-      
-      // If already loaded, play immediately
-      if (bgAudio.readyState >= 3) {
-        console.log('🎵 Background music already loaded. Playing immediately...');
-        bgAudio.play().catch(e => {
-          console.log('Background music play failed:', e);
-          bgAudioRef.current?.pause();
-          bgAudioRef.current = null;
-        });
-        console.log('🎵 Background music play initiated (immediate).');
-      }
+      bgAudio.play().catch(() => {});
 
       // STEP 4: Start animation cycle ONLY if we have both story image and generated content
       if (currentStoryImage && hasGeneratedContent) {
@@ -924,6 +864,12 @@ export const useAIDrawingBookLogic = () => {
       audio.onended = () => {
         console.log('🎵 Audio ended - starting cleanup');
         
+        // Stop background music
+        setTimeout(() => {
+          bgAudio.pause();
+          bgAudio.currentTime = 0;
+        }, 2000);
+        
         // Clean up animation and state
         cleanupStoryAnimation();
         
@@ -938,9 +884,16 @@ export const useAIDrawingBookLogic = () => {
       audio.onerror = () => {
         console.log('❌ Audio error - starting cleanup');
         
-        // Ensure background music is stopped if story audio errors
         // Clean up animation and state
         cleanupStoryAnimation();
+        
+        // Stop background music
+        bgAudio.pause();
+        bgAudio.currentTime = 0;
+        
+        // Clean up audio resources
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
         
         setError("Could not play the story audio.");
         console.log('✅ Audio error cleanup complete');
@@ -948,7 +901,6 @@ export const useAIDrawingBookLogic = () => {
     } catch (err) {
       console.log('💥 Error in handleReadStory:', err);
       setError(`Could not generate audio for the story using ${storytellerType}.`);
-      // Ensure background music is stopped if any error occurs before audio playback
       cleanupStoryAnimation();
     }
   };
@@ -1131,8 +1083,9 @@ const generateAndDownloadVideo = useCallback(async () => {
     // Write audio files
     ffmpeg.FS('writeFile', 'audio.mp3', await fetchFile(generatedAudioBlob));
     
-    // Use local background music file
-    const bgMusicResponse = await fetch('/sounds/pianoSound.mp3');
+    // Download and write background music
+    const bgMusicUrl = "https://cdn.pixabay.com/download/audio/2025/06/20/audio_f144ebba0c.mp3?filename=babies-piano-45-seconds-362933.mp3";
+    const bgMusicResponse = await fetch(bgMusicUrl);
     const bgMusicBlob = await bgMusicResponse.blob();
     ffmpeg.FS('writeFile', 'bg_music.mp3', await fetchFile(bgMusicBlob));
     
