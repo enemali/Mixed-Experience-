@@ -1137,6 +1137,7 @@ const generateAndDownloadVideo = useCallback(async () => {
       loadImage(`data:image/png;base64,${historyItem.sketch}`),
       loadImage(`data:image/png;base64,${historyItem.generated}`)
     ]);
+
     
     // Enhanced drawing function from the preview
     const drawImageWithBorder = (img, x, y, width, height, borderColor, placeholderText) => {
