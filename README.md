@@ -64,6 +64,9 @@ VITE_ELEVENLABS_SIGNED_URL_ENDPOINT=/api/signed-url
 # Google Gemini API Configuration (Optional)
 VITE_GEMINI_API_KEY=your-actual-gemini-api-key-here
 VITE_GEMINI_MODEL=gemini-1.5-flash
+
+# Pollinations AI Configuration
+VITE_POLLINATIONS_API_KEY=your-actual-pollinations-api-key-here
 ```
 
 #### ElevenLabs Setup:
@@ -77,6 +80,11 @@ VITE_GEMINI_MODEL=gemini-1.5-flash
 1. Go to [Google AI Studio](https://aistudio.google.com/)
 2. Create an API key
 3. This is used as a fallback for handwriting recognition when Tesseract.js fails
+
+#### Pollinations AI Setup:
+1. Sign up at [Pollinations](https://pollinations.ai)
+2. Get your API key from your account dashboard
+3. This is used for AI image generation and enhancement features
 
 ### 3. Run Development Server
 ```bash
