@@ -418,8 +418,13 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       zIndex: 10,
                       position: "relative",
                     }}
-                    onClick={handleColoringClick}
+                    onMouseDown={handleColoringClick}
+                    onMouseMove={handleColoringMouseMove}
+                    onMouseUp={handleColoringMouseUp}
+                    onMouseLeave={handleColoringMouseUp}
                     onTouchStart={handleColoringClick}
+                    onTouchMove={handleColoringMouseMove}
+                    onTouchEnd={handleColoringMouseUp}
                   />
 
                   {hasGeneratedContent && (

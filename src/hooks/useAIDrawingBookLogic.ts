@@ -459,6 +459,75 @@ export const useAIDrawingBookLogic = () => {
   const handleColoringInteraction = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ) => {
+    handleColoringInteraction(e);
+  };
+
+  // Toggle pen mode function
+  const togglePenMode = () => {
+    setIsPenMode(prev => !prev);
+  };
+
+  // Handle mouse move for pen drawing
+  const handleColoringMouseMove = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
+    if (!isDrawingOnColoring || !isPenMode) return;
+    
+    const canvas = coloringCanvasRef.current;
+    if (!canvas) return;
+    
+    e.preventDefault();
+    const currentPos = getCanvasPos(canvas, e.nativeEvent);
+    const ctx = canvas.getContext("2d");
+    
+    if (ctx) {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = brushSize;
+      
+      // Create glossy effect with gradient
+      const gradient = ctx.createRadialGradient(
+        currentPos.x, currentPos.y, 0,
+        currentPos.x, currentPos.y, brushSize / 2
+      );
+      gradient.addColorStop(0, selectedColor);
+      gradient.addColorStop(0.7, selectedColor + '80');
+      gradient.addColorStop(1, selectedColor + '20');
+      
+      ctx.strokeStyle = gradient;
+      ctx.beginPath();
+      ctx.moveTo(lastColoringPos.x, lastColoringPos.y);
+      ctx.lineTo(currentPos.x, currentPos.y);
+      ctx.stroke();
+      
+      setLastColoringPos(currentPos);
+    }
+  };
+
+  // Handle mouse up for pen drawing
+  const handleColoringMouseUp = () => {
+    setIsDrawingOnColoring(false);
+    
+    // Save the current state to history after drawing
+    if (selectedHistoryIndex !== null && history[selectedHistoryIndex]) {
+      const canvas = coloringCanvasRef.current;
+      if (canvas) {
+        const updatedGeneratedBase64 = canvas.toDataURL("image/png").split(",")[1];
+        setHistory((prev) =>
+          prev.map((item, i) =>
+            i === selectedHistoryIndex
+              ? { ...item, generated: updatedGeneratedBase64 }
+              : item
+          )
+        );
+      }
+    }
+  };
+
+  const handleColoringInteraction = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     const canvas = coloringCanvasRef.current;
     if (!canvas || !hasGeneratedContent) {
       setError("Please generate a drawing first to color!");
