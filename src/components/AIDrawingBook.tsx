@@ -64,6 +64,12 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     ffmpegLoading,
     generateAndDownloadVideo,
     
+    // Pen tool state
+    togglePenMode,
+    isPenMode,
+    brushSize,
+    setBrushSize,
+    
     // Drawing handlers
     startDrawing,
     drawSketch,
