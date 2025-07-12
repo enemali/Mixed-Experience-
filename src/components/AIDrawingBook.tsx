@@ -142,7 +142,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
       <div className="flex-1 flex flex-col p-2 sm:p-2 gap-2 max-w-full px-4 sm:px-6 lg:px-8">
         
         {/* Top Row: Gallery (Horizontal on tablets/phones) */}
-        <div className="flex flex-col lg:flex-row gap-3">
+        {/* <div className="flex flex-col lg:flex-row gap-3"> */} 
           
           {/* Gallery Section - Horizontal scroll on mobile/tablet*/}
           <div className="bg-white rounded-xl shadow-lg p-3 border border-purple-200 lg:min-w-[200px]"> 
