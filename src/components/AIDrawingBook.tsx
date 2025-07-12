@@ -172,8 +172,10 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
-                  </div>
                     <div className="absolute bottom-1 left-1 w-5 h-5 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-green-500 text-white font-bold text-xs shadow-lg">
+                    </div>
+                  </div>
+                ))
               )}
             </div>
           </div>
@@ -212,7 +214,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             <div className="bg-white rounded-xl shadow-lg border border-orange-200 overflow-hidden">
               {/* line them side by side */}
               <div className="flex items-center justify-center bg-gradient-to-r from-orange-400 to-pink-500 p-2">
-                < BookOpen size={18} className="text-white font-bold text-lg mr-1" />
+                <BookOpen size={18} className="text-white font-bold text-lg mr-1" />
                 <h4 className="text-white font-bold text-lg">
                   Your Story
                 </h4>
