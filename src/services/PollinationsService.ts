@@ -1,5 +1,5 @@
 export class PollinationsService {
-  private static readonly BASE_URL = '/api/pollinations/prompt/';
+  private static readonly BASE_URL = 'https://image.pollinations.ai/prompt/';
 
   static async generateImage(prompt: string): Promise<Blob> {
     const apiKey = import.meta.env.VITE_POLLINATIONS_API_KEY;

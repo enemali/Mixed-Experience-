@@ -13,12 +13,5 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
     },
-    proxy: {
-      '/api/pollinations': {
-        target: 'https://image.pollinations.ai',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/pollinations/, ''),
-      },
-    },
   },
 });
