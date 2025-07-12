@@ -113,7 +113,7 @@ export class GeminiService {
   }
 
   static async recognizeImage(base64ImageData: string): Promise<string> {
-    const descriptionPrompt = "short subject focus common description only, No colors. No intoductions, child sensitive, child safe, starting with 'line sketch of' E.g: smiling sun, mushroom house with a girl";
+    const descriptionPrompt = "short subject focus common description only, No colors. No intoductions, child sensitive, child safe, starting with 'black line drawing of' E.g: smiling sun, mushroom house with a girl";
     const payload = {
       contents: [
         {
