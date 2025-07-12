@@ -1488,5 +1488,9 @@ const generateAndDownloadVideo = useCallback(async () => {
     setShowWebcam,
     handleWebcamCapture,
     handleWebcamCancel,
+    
+    // Pen tool handlers
+    handleColoringMouseMove,
+    handleColoringMouseUp,
   };
 };

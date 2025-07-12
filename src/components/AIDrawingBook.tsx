@@ -86,6 +86,10 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     setShowWebcam,
     handleWebcamCapture,
     handleWebcamCancel,
+    
+    // Pen tool handlers
+    handleColoringMouseMove,
+    handleColoringMouseUp,
   } = useAIDrawingBookLogic();
 
   // API Key Check UI
