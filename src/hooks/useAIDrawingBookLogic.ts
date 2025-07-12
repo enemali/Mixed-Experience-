@@ -834,16 +834,16 @@ export const useAIDrawingBookLogic = () => {
         setHistory((prev) =>
           prev.map((item, idx) =>
             idx === selectedHistoryIndex
-              ? { ...item, story: storyText, storyImageBase64: null }
+              ? { ...item, story: storyText, storyImageBase64: generatedStoryImageBase64 }
               : item
           )
         );
       }
     } catch (err: any) {
       console.error("Error generating story:", err);
-      setError(err.message || "The storyteller seems to be napping! Please try again.");
-      setStory("");
-      setStoryImageBase64(null);
+      const storyImageBlob = await PollinationsService.generateImage("colorful child scene+no+nudit" + storyText);
+      const generatedStoryImageBase64 = await blobToBase64(storyImageBlob); 
+      setStoryImageBase64(generatedStoryImageBase64);
     } finally {
       setIsGeneratingStory(false);
     }
