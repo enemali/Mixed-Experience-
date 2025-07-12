@@ -536,7 +536,7 @@ export const useAIDrawingBookLogic = () => {
       if (isReuse) {
         // Reuse: use previous prompt/description
         const sketchDescription = history[historyIdx!].recognizedImage;
-        const imageGenerationPrompt = `${sketchDescription},coloring book style, line art, no fill, No sexual content,no colors, child friendly, black lines, white background`;
+        const imageGenerationPrompt = `${sketchDescription},coloring book style, line art, no fill, No sexual content , child friendly, black lines, white background`;
         const imageBlob = await PollinationsService.generateImage(imageGenerationPrompt);
         const imageUrl = URL.createObjectURL(imageBlob);
 
@@ -805,7 +805,7 @@ export const useAIDrawingBookLogic = () => {
         const encodedStory = encodeURIComponent(story);
         const voice = "alloy";
         // Add the API key as a query parameter using Bearer token method
-        const url = `https://text.pollinations.ai/'tell 4 year old kid a moral story about '${encodedStory}?model=openai-audio&voice=${voice}&token=${pollinationsApiKey}`;
+        const url = `https://text.pollinations.ai/'tell a 4 year old kid a moral story about '${encodedStory}?model=openai-audio&voice=${voice}&token=${pollinationsApiKey}`;
         const response = await fetch(url);
         if (!response.ok) {
           const errorText = await response.text();

@@ -172,6 +172,8 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
+                    <div className="absolute bottom-1 left-1 w-5 h-5 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-green-500 text-white font-bold text-xs shadow-lg">
+                    </div>
                   </div>
                 ))
               )}
