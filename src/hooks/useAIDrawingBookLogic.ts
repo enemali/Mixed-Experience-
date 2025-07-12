@@ -1398,8 +1398,16 @@ const generateAndDownloadVideo = useCallback(async () => {
     startDrawing,
     drawSketch,
     stopDrawing,
-    handleColoringClick,
+    handleColoringInteraction,
+    handleColoringMouseMove,
+    handleColoringMouseUp,
     handleColorSelect,
+    
+    // Pen tool
+    isPenMode,
+    brushSize,
+    setBrushSize,
+    togglePenMode,
     
     // Action handlers
     handleClearAll,

@@ -445,8 +445,49 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
 
             {/* Color Palette - Vertical beside AI Canvas */}
-            <div className="bg-white rounded-xl shadow-lg p-3 border border-orange-200 lg:w-20">
-              <h3 className="text-lg font-bold text-orange-700 mb-2 text-center lg:text-center">Colors</h3>
+            <div className="bg-white rounded-xl shadow-lg p-3 border border-orange-200 lg:w-24">
+              <h3 className="text-lg font-bold text-orange-700 mb-2 text-center lg:text-center">Tools</h3>
+              
+              {/* Pen Tool Toggle */}
+              <div className="mb-3 flex justify-center">
+                <button
+                  onClick={togglePenMode}
+                  disabled={!hasGeneratedContent}
+                  className={`p-2 rounded-lg transition-all duration-200 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isPenMode 
+                      ? 'bg-purple-500 text-white shadow-lg' 
+                      : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                  }`}
+                  title={isPenMode ? 'Switch to Fill Tool' : 'Switch to Pen Tool'}
+                >
+                  {isPenMode ? (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2h12v11H4V4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+              
+              {/* Brush Size Slider (only show in pen mode) */}
+              {isPenMode && hasGeneratedContent && (
+                <div className="mb-3">
+                  <label className="text-xs text-gray-600 block text-center mb-1">Size</label>
+                  <input
+                    type="range"
+                    min="2"
+                    max="20"
+                    value={brushSize}
+                    onChange={(e) => setBrushSize(Number(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="text-xs text-center text-gray-500 mt-1">{brushSize}px</div>
+                </div>
+              )}
+              
               <div className="flex flex-row lg:flex-col flex-wrap gap-2 justify-center lg:justify-start">
                 {colors.map((color, index) => (
                   <button
@@ -460,6 +501,17 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     title={`Color: ${color}`}
                   />
                 ))}
+              </div>
+              
+              {/* Mode Indicator */}
+              <div className="mt-3 text-center">
+                <div className={`text-xs font-medium px-2 py-1 rounded-full ${
+                  isPenMode 
+                    ? 'bg-purple-100 text-purple-700' 
+                    : 'bg-blue-100 text-blue-700'
+                }`}>
+                  {isPenMode ? '✏️ Pen' : '🎨 Fill'}
+                </div>
               </div>
             </div>
           </div>
