@@ -906,14 +906,6 @@ export const useAIDrawingBookLogic = () => {
       audio.onended = () => {
         console.log('🎵 Audio ended - starting cleanup');
         
-        // Stop background music
-        setTimeout(() => {
-          if (bgAudioRef.current) {
-            bgAudioRef.current.pause();
-            bgAudioRef.current.currentTime = 0;
-          }
-        }, 2000);
-        
         // Clean up animation and state
         cleanupStoryAnimation();
         
@@ -930,10 +922,6 @@ export const useAIDrawingBookLogic = () => {
         
         // Clean up animation and state
         cleanupStoryAnimation();
-        
-        // Clean up audio resources
-        URL.revokeObjectURL(audioUrl);
-        audioRef.current = null;
         
         setError("Could not play the story audio.");
         console.log('✅ Audio error cleanup complete');
