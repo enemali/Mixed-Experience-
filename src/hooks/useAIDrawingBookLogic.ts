@@ -823,17 +823,18 @@ export const useAIDrawingBookLogic = () => {
       // Start typing effect for the story
       typeStory(storyText);
 
-      // Generate Story Image
-      const storyImageBlob = await PollinationsService.generateImage("colorful child scene+no+nudit" + storyText);
-      const storyImageBase64 = await blobToBase64(storyImageBlob);
-      setStoryImageBase64(storyImageBase64);
+      // Story image generation disabled due to CORS/network issues
+      // const storyImageBlob = await PollinationsService.generateImage("colorful child scene+no+nudit" + storyText);
+      // const storyImageBase64 = await blobToBase64(storyImageBlob);
+      // setStoryImageBase64(storyImageBase64);
+      setStoryImageBase64(null);
 
       // Save story and story image to history if from history
       if (selectedHistoryIndex !== null && history[selectedHistoryIndex]) {
         setHistory((prev) =>
           prev.map((item, idx) =>
             idx === selectedHistoryIndex
-              ? { ...item, story: storyText, storyImageBase64 }
+              ? { ...item, story: storyText, storyImageBase64: null }
               : item
           )
         );
