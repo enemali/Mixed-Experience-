@@ -145,16 +145,16 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
         <div className="flex flex-col lg:flex-row gap-3"> 
           
           {/* Gallery Section - Horizontal scroll on mobile/tablet*/}
-          <div className="bg-white rounded-xl shadow-lg p-3 border border-purple-200 lg:min-w-[200px]"> 
+          <div className="bg-white rounded-xl shadow-lg p-3 border border-purple-200 lg:flex-1"> 
             <h3 className="text-lg font-bold text-purple-700 mb-2 text-center lg:text-left">Gallery</h3>
-            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible lg:overflow-y-auto lg:max-h-32">
+            <div className="flex lg:flex-row gap-2 overflow-x-auto lg:overflow-x-auto lg:overflow-y-hidden lg:h-24">
               {history.length === 0 ? (
                 <p className="text-gray-500 text-center text-sm whitespace-nowrap lg:whitespace-normal">No drawings</p>
               ) : (
                 history.map((item, index) => (
                   <div
                     key={index}
-                    className={`relative flex-shrink-0 w-16 h-16 lg:w-full lg:aspect-square border-2 rounded-lg cursor-pointer overflow-hidden transform transition-all duration-200 ease-in-out
+                    className={`relative flex-shrink-0 w-16 h-16 lg:w-24 lg:h-24 border-2 rounded-lg cursor-pointer overflow-hidden transform transition-all duration-200 ease-in-out
                       ${selectedHistoryIndex === index ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200 hover:border-blue-300'}`}
                     onClick={() => handleSelectHistory(index)}
                   >
@@ -173,7 +173,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       </svg>
                     </button>
                   </div>
-                ))
+                    <div className="absolute bottom-1 left-1 w-5 h-5 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-green-500 text-white font-bold text-xs shadow-lg">
               )}
             </div>
           </div>
