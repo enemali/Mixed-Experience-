@@ -390,7 +390,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                 {/* Story Section Overlay */}
                 {showStorySection && (
-                  <div className="h-40 absolute inset-0 z-40 flex flex-col justify-center items-center rounded-2xl bg-black/50">
+                  <div className="h-40 absolute inset-0 z-40 flex flex-col justify-center items-center rounded-2xl bg-black/50"> 
                     <div className="w-full px-2">
                       <div className="flex flex-wrap gap-2 mb-1 justify-center">
                         <button
