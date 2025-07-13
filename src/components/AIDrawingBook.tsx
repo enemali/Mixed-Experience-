@@ -390,8 +390,21 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                 {/* Story Section Overlay */}
                 {showStorySection && (
-                  <div className="h-40 absolute inset-0 z-40 flex flex-col justify-center items-center rounded-2xl bg-black/50"> 
-                    <div className="w-full px-2">
+                  <div className="absolute inset-0 z-40 flex items-center justify-center p-4 rounded-2xl bg-black/70"> 
+                    <div className="flex gap-4 w-full max-w-2xl">
+                      {/* Drawn Image on the Left */}
+                      <div className="flex-shrink-0 w-32 h-32">
+                        {selectedHistoryIndex !== null && history[selectedHistoryIndex] && (
+                          <img
+                            src={`data:image/png;base64,${history[selectedHistoryIndex].sketch}`}
+                            alt="Your Drawing"
+                            className="w-full h-full object-cover rounded-xl border-2 border-white/30 shadow-lg"
+                          />
+                        )}
+                      </div>
+                      
+                      {/* Story Content on the Right */}
+                      <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap gap-2 mb-1 justify-center">
                         <button
                           onClick={generateStory}
@@ -472,6 +485,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                           </div>
                         </div>
                       )}
+                      </div>
                     </div>
                   </div>
                 )}
