@@ -390,9 +390,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                 {/* Story Section Overlay */}
                 {showStorySection && (
-                  <div className="absolute inset-0 z-40 flex flex-col justify-center items-center p-4 rounded-2xl bg-black/70">
-                    <div className="w-full max-w-md">
-                      <div className="flex flex-wrap gap-2 mb-4 justify-center">
+                  <div className="h-40 absolute inset-0 z-40 flex flex-col justify-center items-center rounded-2xl bg-black/50">
+                    <div className="w-full px-2">
+                      <div className="flex flex-wrap gap-2 mb-1 justify-center">
                         <button
                           onClick={generateStory}
                           disabled={isGeneratingStory || isTypingStory}
@@ -459,7 +459,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                       {/* Story Display */}
                       {(story || displayedStory) && (
-                        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20 max-h-40 overflow-y-auto">
+                        <div className="w-full bg-white/10 backdrop-blur-sm rounded-xl  border border-white/20  overflow-y-auto">
                           <div className="text-sm leading-relaxed text-white">
                             {isTypingStory ? (
                               <span>
