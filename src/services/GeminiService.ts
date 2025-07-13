@@ -137,33 +137,35 @@ export class GeminiService {
     return result.candidates[0].content.parts[0].text.trim();
   }
 
-  static async recognizePhoto(base64ImageData: string): Promise<string> {
-    const descriptionPrompt = "Describe this photo in detailed keywords related to the subject. Focus on the main subject and two key feature,like 'a smiling sun', 'a round roof house with a tree', 'a cat chasing a ball'. Do not use introduction,Do not mention any colors.";
-    const payload = {
-      contents: [
-        {
-          parts: [
-            { text: descriptionPrompt },
-            {
-              inlineData: { mimeType: "image/png", data: base64ImageData },
-            },
-          ],
-        },
-      ],
-    };
+  // static async recognizePhoto(base64ImageData: string): Promise<string> {
+  //   const descriptionPrompt = "Describe this photo in detailed keywords related to the subject. Focus on the main subject and two key feature,like 'a smiling sun', 'a round roof house with a tree', 'a cat chasing a ball'. Do not use introduction,Do not mention any colors.";
+  //   const payload = {
+  //     contents: [
+  //       {
+  //         parts: [
+  //           { text: descriptionPrompt },
+  //           {
+  //             inlineData: { mimeType: "image/png", data: base64ImageData },
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   };
 
-    // Token count for recognized photo
-    const tokenInfo = await this.countTokens(payload);
-    this.logTokenInfo("Recognized Photo (countTokens)", tokenInfo);
+  //   // Token count for recognized photo
+  //   const tokenInfo = await this.countTokens(payload);
+  //   this.logTokenInfo("Recognized Photo (countTokens)", tokenInfo);
 
-    const result = await this.generateContent(payload);
-    this.logTokenInfo("Recognized Photo (generateContent)", null, result.usageMetadata);
+  //   const result = await this.generateContent(payload);
+  //   this.logTokenInfo("Recognized Photo (generateContent)", null, result.usageMetadata);
 
-    return result.candidates[0].content.parts[0].text.trim();
-  }
+  //   return result.candidates[0].content.parts[0].text.trim();
+  // }
 
   static async generateStory(recognizedImage: string): Promise<string> {
-    const prompt = `Write a very short (2-3 sentences), happy, moral, simple story for a 3-5 years old child about this: "${recognizedImage}"`;
+    const prompt = `Write a very short (2-3 sentences), happy, moral,health warning, simple story for a 3-5 years old child about this:
+    // Recognized Image , trim any words like 'line sketch of' or 'photo of' or drawing of' from the start.
+    "${recognizedImage.replace(/^(line sketch of|photo of|drawing of)\s+/i, '')}"`;
     const payload = {
       contents: [{ parts: [{ text: prompt }] }],
     };

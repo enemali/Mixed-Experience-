@@ -719,6 +719,7 @@ export const useAIDrawingBookLogic = () => {
       } else {
         // New drawing: call Gemini for description, then Pollinations
         const sketchDescription = await GeminiService.recognizeImage(base64ImageData);
+        // Set recognized image but trim words like 'line sketch of' or 'photo of' or 'drawing of'
         setRecognizedImage(sketchDescription);
 
         // Generate coloring book image
