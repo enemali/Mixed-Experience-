@@ -390,7 +390,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                 {/* Story Section Overlay */}
                 {showStorySection && (
-                  <div className="absolute inset-0 z-40 flex items-center justify-center p-4 rounded-2xl bg-black/70"> 
+                  <div className="absolute top-4 left-4 right-4 h-32 z-40 flex items-center justify-center p-4 rounded-2xl bg-black/70"> 
                     <div className="flex gap-4 w-full max-w-2xl">
                       {/* Drawn Image on the Left */}
                       <div className="flex-shrink-0 w-32 h-32">
@@ -472,7 +472,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                       {/* Story Display */}
                       {(story || displayedStory) && (
-                        <div className="w-full bg-white/10 backdrop-blur-sm rounded-xl  border border-white/20  overflow-y-auto">
+                        <div className="w-full bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 max-h-20 overflow-y-auto">
                           <div className="text-sm leading-relaxed text-white">
                             {isTypingStory ? (
                               <span>
