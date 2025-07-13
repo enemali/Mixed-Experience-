@@ -388,6 +388,94 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     onTouchEnd={handleColoringMouseUp}
                   />
 
+                {/* Story Section Overlay */}
+                {showStorySection && (
+                  <div className="absolute inset-0 z-40 flex flex-col justify-center items-center p-4 rounded-2xl bg-black/70">
+                    <div className="w-full max-w-md">
+                      <div className="flex flex-wrap gap-2 mb-4 justify-center">
+                        <button
+                          onClick={generateStory}
+                          disabled={isGeneratingStory || isTypingStory}
+                          className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20"
+                        >
+                          {isGeneratingStory || isTypingStory ? (
+                            <>
+                              <Loader size={16} className="animate-spin" />
+                              {isGeneratingStory ? 'Creating...' : 'Writing...'}
+                            </>
+                          ) : (
+                            <>
+                              <Zap size={16} />
+                              Create Story
+                            </>
+                          )}
+                        </button>
+
+                        {!isTypingStory && story && (
+                          <button
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20"
+                            onClick={() => handleReadStory('pollinations')}
+                            disabled={isReadingStory}
+                          >
+                            {isReadingStory ? (
+                              <>
+                                <Loader size={16} className="animate-spin" />
+                                Reading...
+                              </>
+                            ) : (
+                              <>
+                                <Volume2 size={16} />
+                                Read Aloud
+                              </>
+                            )}
+                          </button>
+                        )}
+
+                        {!isTypingStory && story && generatedAudioBlob && (
+                          <button
+                            onClick={generateAndDownloadVideo}
+                            disabled={isGeneratingVideo || selectedHistoryIndex === null || ffmpegLoading || !ffmpegLoaded}
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20"
+                          >
+                            {ffmpegLoading ? (
+                              <>
+                                <Loader size={16} className="animate-spin" />
+                                Loading...
+                              </>
+                            ) : isGeneratingVideo ? (
+                              <>
+                                <Loader size={16} className="animate-spin" />
+                                Creating...
+                              </>
+                            ) : (
+                              <>
+                                <Download size={16} />
+                                Video
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Story Display */}
+                      {(story || displayedStory) && (
+                        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20 max-h-40 overflow-y-auto">
+                          <div className="text-sm leading-relaxed text-white">
+                            {isTypingStory ? (
+                              <span>
+                                {displayedStory}
+                                <span className="animate-pulse text-orange-300">|</span>
+                              </span>
+                            ) : (
+                              story
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                   {hasGeneratedContent && (
                     <div className="absolute bottom-4 right-4 z-30">
                       <div
@@ -481,94 +569,6 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                 </div>
 
-                {/* Story Section */}
-                {showStorySection && (
-
-                  <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-                    <div className="p-1">
-                      <div className="flex flex-wrap gap-1">
-                        <button
-                          onClick={generateStory}
-                          disabled={isGeneratingStory || isTypingStory}
-                          className="flex items-center justify-center gap-2 px-4 py-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20"
-                        >
-                          {isGeneratingStory || isTypingStory ? (
-                            <>
-                              <Loader size={16} className="animate-spin" />
-                              {isGeneratingStory ? 'Creating...' : 'Writing...'}
-                            </>
-                          ) : (
-                            <>
-                              <Zap size={16} />
-                              Create Story
-                            </>
-                          )}
-                        </button>
-
-                        {!isTypingStory && story && (
-                          <button
-                            className="flex items-center justify-center gap-2 px-4 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20"
-                            onClick={() => handleReadStory('pollinations')}
-                            disabled={isReadingStory}
-                          >
-                            {isReadingStory ? (
-                              <>
-                                <Loader size={16} className="animate-spin" />
-                                Reading...
-                              </>
-                            ) : (
-                              <>
-                                <Volume2 size={16} />
-                                Read Aloud
-                              </>
-                            )}
-                          </button>
-                        )}
-
-                        {!isTypingStory && story && generatedAudioBlob && (
-                          <button
-                            onClick={generateAndDownloadVideo}
-                            disabled={isGeneratingVideo || selectedHistoryIndex === null || ffmpegLoading || !ffmpegLoaded}
-                            className="flex items-center justify-center gap-2 px-4 py-1 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20"
-                          >
-                            {ffmpegLoading ? (
-                              <>
-                                <Loader size={16} className="animate-spin" />
-                                Loading...
-                              </>
-                            ) : isGeneratingVideo ? (
-                              <>
-                                <Loader size={16} className="animate-spin" />
-                                Creating...
-                              </>
-                            ) : (
-                              <>
-                                <Download size={16} />
-                                Video
-                              </>
-                            )}
-                          </button>
-                        )}
-                      </div>
-
-                      {/* Story Display */}
-                      {(story || displayedStory) && (
-                        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-2 border border-white/20">
-                          <div className="text-sm leading-relaxed text-white">
-                            {isTypingStory ? (
-                              <span>
-                                {displayedStory}
-                                <span className="animate-pulse text-orange-300">|</span>
-                              </span>
-                            ) : (
-                              story
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
