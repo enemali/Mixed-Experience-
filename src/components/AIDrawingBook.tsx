@@ -389,7 +389,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   />
 
                 {/* Story Section Overlay */}
-                {showStorySection && (
+                {showStorySection && story && (
                   <div className="absolute top-4 left-4 right-4 z-40 flex items-center justify-center p-4 rounded-2xl bg-black/70 min-h-32"> 
                     <div className="flex gap-4 w-full max-w-2xl">
                       {/* Drawn Image on the Left */}
