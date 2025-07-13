@@ -357,26 +357,95 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     AI Magic Canvas
                   </h3>
                   
-                  {/* Story Section Toggle Button - Always visible when story exists */}
-                  {story && (
+                  {/* Story Action Buttons */}
+                  <div className="flex items-center gap-2">
+                    {/* Create Story Button */}
                     <button
-                      onClick={() => setShowStorySection(!showStorySection)}
-                      className="flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 border border-white/30"
+                      onClick={generateStory}
+                      disabled={isGeneratingStory || isTypingStory}
+                      className="flex items-center justify-center gap-1 px-3 py-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 text-sm"
                     >
-                      <BookOpen size={16} />
-                      <span className="hidden sm:inline">
-                        {showStorySection ? 'Hide Story' : 'Show Story'}
-                      </span>
-                      <svg 
-                        className={`w-4 h-4 transition-transform duration-300 ${showStorySection ? '' : 'rotate-180'}`}
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
+                      {isGeneratingStory || isTypingStory ? (
+                        <>
+                          <Loader size={14} className="animate-spin" />
+                          <span className="hidden sm:inline">{isGeneratingStory ? 'Creating...' : 'Writing...'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Zap size={14} />
+                          <span className="hidden sm:inline">Create Story</span>
+                        </>
+                      )}
                     </button>
-                  )}
+
+                    {/* Read Aloud Button */}
+                    {!isTypingStory && story && (
+                      <button
+                        className="flex items-center justify-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20 text-sm"
+                        onClick={() => handleReadStory('pollinations')}
+                        disabled={isReadingStory}
+                      >
+                        {isReadingStory ? (
+                          <>
+                            <Loader size={14} className="animate-spin" />
+                            <span className="hidden sm:inline">Reading...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Volume2 size={14} />
+                            <span className="hidden sm:inline">Read Aloud</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+
+                    {/* Video Button */}
+                    {!isTypingStory && story && generatedAudioBlob && (
+                      <button
+                        onClick={generateAndDownloadVideo}
+                        disabled={isGeneratingVideo || selectedHistoryIndex === null || ffmpegLoading || !ffmpegLoaded}
+                        className="flex items-center justify-center gap-1 px-3 py-1 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 text-sm"
+                      >
+                        {ffmpegLoading ? (
+                          <>
+                            <Loader size={14} className="animate-spin" />
+                            <span className="hidden sm:inline">Loading...</span>
+                          </>
+                        ) : isGeneratingVideo ? (
+                          <>
+                            <Loader size={14} className="animate-spin" />
+                            <span className="hidden sm:inline">Creating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Download size={14} />
+                            <span className="hidden sm:inline">Video</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+
+                    {/* Story Section Toggle Button */}
+                    {story && (
+                      <button
+                        onClick={() => setShowStorySection(!showStorySection)}
+                        className="flex items-center gap-1 px-3 py-1 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 border border-white/30 text-sm"
+                      >
+                        <BookOpen size={14} />
+                        <span className="hidden sm:inline">
+                          {showStorySection ? 'Hide Story' : 'Show Story'}
+                        </span>
+                        <svg 
+                          className={`w-3 h-3 transition-transform duration-300 ${showStorySection ? '' : 'rotate-180'}`}
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -432,71 +501,6 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       
                       {/* Story Content on the Right */}
                       <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap gap-2 mb-1 justify-center">
-                        <button
-                          onClick={generateStory}
-                          disabled={isGeneratingStory || isTypingStory}
-                          className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20"
-                        >
-                          {isGeneratingStory || isTypingStory ? (
-                            <>
-                              <Loader size={16} className="animate-spin" />
-                              {isGeneratingStory ? 'Creating...' : 'Writing...'}
-                            </>
-                          ) : (
-                            <>
-                              <Zap size={16} />
-                              Create Story
-                            </>
-                          )}
-                        </button>
-
-                        {!isTypingStory && story && (
-                          <button
-                            className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20"
-                            onClick={() => handleReadStory('pollinations')}
-                            disabled={isReadingStory}
-                          >
-                            {isReadingStory ? (
-                              <>
-                                <Loader size={16} className="animate-spin" />
-                                Reading...
-                              </>
-                            ) : (
-                              <>
-                                <Volume2 size={16} />
-                                Read Aloud
-                              </>
-                            )}
-                          </button>
-                        )}
-
-                        {!isTypingStory && story && generatedAudioBlob && (
-                          <button
-                            onClick={generateAndDownloadVideo}
-                            disabled={isGeneratingVideo || selectedHistoryIndex === null || ffmpegLoading || !ffmpegLoaded}
-                            className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20"
-                          >
-                            {ffmpegLoading ? (
-                              <>
-                                <Loader size={16} className="animate-spin" />
-                                Loading...
-                              </>
-                            ) : isGeneratingVideo ? (
-                              <>
-                                <Loader size={16} className="animate-spin" />
-                                Creating...
-                              </>
-                            ) : (
-                              <>
-                                <Download size={16} />
-                                Video
-                              </>
-                            )}
-                          </button>
-                        )}
-                      </div>
-
                       {/* Story Display */}
                       {(story || displayedStory) && (
                         <div className="w-full bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
