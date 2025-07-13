@@ -358,7 +358,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   </h3>
                   
                   {/* Story Action Buttons */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center">
                     {/* Create Story Button */}
                     <button
                       onClick={generateStory}
