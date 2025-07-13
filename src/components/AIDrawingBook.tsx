@@ -350,11 +350,32 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
             {/* AI Generated Canvas */}
             <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-              <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm">
-                <h3 className="text-white font-bold text-lg flex items-center gap-2">
-                  <Wand2 size={20} />
-                  AI Magic Canvas
-                </h3>
+              <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm p-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                    <Wand2 size={20} />
+                    AI Magic Canvas
+                  </h3>
+                  
+                  {/* Story Section Toggle Button */}
+                  {showStorySection && (
+                    <button
+                      onClick={() => setShowStorySection(!showStorySection)}
+                      className="flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 border border-white/30"
+                    >
+                      <BookOpen size={16} />
+                      <span className="hidden sm:inline">Hide Story</span>
+                      <svg 
+                        className="w-4 h-4 transition-transform duration-300" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="p-2">
