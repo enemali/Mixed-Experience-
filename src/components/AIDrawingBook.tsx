@@ -183,9 +183,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
               <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50 backdrop-blur-sm p-1">
                 <div className="flex items-center justify-between">
                   <h3 className="text-white font-bold text-lg flex items-center gap-2">
-                    <Palette size={20} />
+                      Hide Story
                     Draw Here
-                  </h3>
+                 {showStorySection && (
                   <button
                     onClick={() => setShowWebcam(true)}
                     disabled={showWebcam}
@@ -390,7 +390,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   />
 
                 {/* Story Section Overlay */}
-                {showStorySection && story && (
+                {showStorySection && (
                   <div className="absolute top-4 left-4 right-4 z-40 flex items-center justify-center p-4 rounded-2xl bg-black/70 min-h-32"> 
                     <div className="flex gap-4 w-full max-w-2xl">
                       {/* Drawn Image on the Left */}
