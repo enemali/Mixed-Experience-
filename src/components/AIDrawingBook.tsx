@@ -182,18 +182,21 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50 backdrop-blur-sm p-1">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-white font-bold text-lg flex items-center gap-2">
-                      Hide Story
+                  <>
+                    <h3 className="text-white font-bold text-lg flex items-center gap-2">
                     Draw Here
-                 {showStorySection && (
-                  <button
-                    onClick={() => setShowWebcam(true)}
-                    disabled={showWebcam}
-                    className="flex items-center gap-2 px-4 py-1 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed border border-white/30"
-                  >
-                    <Camera size={16} />
-                    <span className="hidden sm:inline">Photo</span>
-                  </button>
+                    </h3>
+                    {showStorySection && (
+                      <button
+                        onClick={() => setShowWebcam(true)}
+                        disabled={showWebcam}
+                        className="flex items-center gap-2 px-4 py-1 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed border border-white/30"
+                      >
+                        <Camera size={16} />
+                        <span className="hidden sm:inline">Photo</span>
+                      </button>
+                    )}
+                  </>
                 </div>
               </div>
 
