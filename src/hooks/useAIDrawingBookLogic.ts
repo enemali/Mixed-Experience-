@@ -814,6 +814,11 @@ export const useAIDrawingBookLogic = () => {
       return;
     }
 
+    // Check if Gemini API key is configured
+    if (!GeminiService.getApiKey()) {
+      setError("Gemini API key not configured. Please add VITE_GEMINI_API_KEY to your .env file.");
+      return;
+    }
     setIsGeneratingStory(true);
     setError(null);
 
@@ -842,7 +847,21 @@ export const useAIDrawingBookLogic = () => {
       }
     } catch (err: any) {
       console.error("Error generating story:", err);
-      setError(err.message || "The storyteller seems to be napping! Please try again.");
+      
+      // Provide more specific error messages based on the error type
+      let errorMessage = "The storyteller seems to be napping! Please try again.";
+      
+      if (err.message && err.message.includes('Failed to fetch')) {
+        errorMessage = "Unable to connect to the story generator. Please check your internet connection and API key configuration.";
+      } else if (err.message && err.message.includes('API key')) {
+        errorMessage = "Invalid API key. Please check your VITE_GEMINI_API_KEY in your .env file.";
+      } else if (err.message && err.message.includes('quota')) {
+        errorMessage = "API quota exceeded. Please check your Gemini API usage limits.";
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
       setStory("");
       setStoryImageBase64(null); 
     } finally {
