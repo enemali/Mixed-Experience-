@@ -1513,5 +1513,8 @@ const generateAndDownloadVideo = useCallback(async () => {
     // Pen tool handlers
     handleColoringMouseMove,
     handleColoringMouseUp,
+
+    // Story section toggle
+    setShowStorySection,
   };
 };
