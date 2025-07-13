@@ -49,6 +49,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     isTypingStory,
     displayedStory,
     showStorySection,
+    setShowStorySection,
     error,
     isReadingStory,
     storyImageBase64,
