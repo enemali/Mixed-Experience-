@@ -128,7 +128,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-blue-600 flex flex-col overflow-hidden">
       {/* Header */}
       <header className="bg-white/10 backdrop-blur-lg border-b border-white/20 sticky top-0 z-40">
-        <div className="max-w-full mx-auto px-2 py-1">
+        <div className="max-w-full mx-auto px-2 py-0">
           <div className="flex items-center justify-between">
             <button
               onClick={onBack}
@@ -148,10 +148,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
       </header>
 
       {/* Main Container */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-6 p-6 max-w-full overflow-hidden">
-
-
-
+      <div className="flex-1 flex flex-col lg:flex-row gap-6 px-6 pt-2 pb-6 max-w-full overflow-hidden">
         {/* Center Panel - Main Canvas Area */}
         <div className="flex-1 flex flex-col gap-2 min-w-0">
 
