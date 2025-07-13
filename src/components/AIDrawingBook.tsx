@@ -354,7 +354,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 <div className="flex items-center justify-between">
                   <h3 className="text-white font-bold text-lg flex items-center gap-2">
                     <Wand2 size={20} />
-                    AI Magic Canvas
+                    AI Drawing
                   </h3>
                   
                   {/* Story Action Buttons */}
