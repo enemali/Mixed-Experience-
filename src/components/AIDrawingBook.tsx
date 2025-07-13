@@ -350,9 +350,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
             {/* AI Generated Canvas */}
             <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-              <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm p-2">
+              <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm p-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                  <h3 className="text-white font-bold text-lg flex items-center gap-1">
                     <Wand2 size={20} />
                     AI Drawing
                   </h3>
