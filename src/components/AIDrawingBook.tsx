@@ -357,16 +357,18 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     AI Magic Canvas
                   </h3>
                   
-                  {/* Story Section Toggle Button */}
-                  {showStorySection && (
+                  {/* Story Section Toggle Button - Always visible when story exists */}
+                  {story && (
                     <button
                       onClick={() => setShowStorySection(!showStorySection)}
                       className="flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 border border-white/30"
                     >
                       <BookOpen size={16} />
-                      <span className="hidden sm:inline">Hide Story</span>
+                      <span className="hidden sm:inline">
+                        {showStorySection ? 'Hide Story' : 'Show Story'}
+                      </span>
                       <svg 
-                        className="w-4 h-4 transition-transform duration-300" 
+                        className={`w-4 h-4 transition-transform duration-300 ${showStorySection ? '' : 'rotate-180'}`}
                         fill="none" 
                         stroke="currentColor" 
                         viewBox="0 0 24 24"
