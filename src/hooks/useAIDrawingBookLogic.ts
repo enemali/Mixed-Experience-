@@ -64,6 +64,45 @@ export const useAIDrawingBookLogic = () => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [selectedHistoryIndex, setSelectedHistoryIndex] = useState<number | null>(null);
 
+  // Load history from localStorage on component mount
+  useEffect(() => {
+    try {
+      const savedHistory = localStorage.getItem('drawingHistory');
+      if (savedHistory) {
+        const parsedHistory = JSON.parse(savedHistory);
+        setHistory(parsedHistory);
+        
+        // If there was a selected index, try to restore it
+        const savedIndex = localStorage.getItem('selectedHistoryIndex');
+        if (savedIndex !== null) {
+          const index = parseInt(savedIndex, 10);
+          if (!isNaN(index) && index >= 0 && index < parsedHistory.length) {
+            setSelectedHistoryIndex(index);
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Failed to parse saved history:', e);
+    }
+  }, []);
+
+  // Save history to localStorage whenever it changes
+  useEffect(() => {
+    if (history.length > 0) {
+      localStorage.setItem('drawingHistory', JSON.stringify(history));
+      
+      // Also save the selected index if there is one
+      if (selectedHistoryIndex !== null) {
+        localStorage.setItem('selectedHistoryIndex', selectedHistoryIndex.toString());
+      } else {
+        localStorage.removeItem('selectedHistoryIndex');
+      }
+    } else {
+      localStorage.removeItem('drawingHistory');
+      localStorage.removeItem('selectedHistoryIndex');
+    }
+  }, [history, selectedHistoryIndex]);
+
   // Webcam state - Fixed: Better state management
   const [showWebcam, setShowWebcam] = useState(false);
   const [webcamStream, setWebcamStream] = useState<MediaStream | null>(null);
@@ -243,12 +282,25 @@ export const useAIDrawingBookLogic = () => {
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width;
       canvas.height = rect.height;
+      
+      // Redraw the current image from history if available
+      if (selectedHistoryIndex !== null && history[selectedHistoryIndex]?.generated) {
+        const genImg = new window.Image();
+        genImg.onload = () => {
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(genImg, 0, 0, canvas.width, canvas.height);
+          }
+        };
+        genImg.src = "data:image/png;base64," + history[selectedHistoryIndex].generated;
+      }
     };
 
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
     return () => window.removeEventListener("resize", resizeCanvas);
-  }, []);
+  }, [history, selectedHistoryIndex]);
 
   // Fixed: Improved webcam stream management
   useEffect(() => {
@@ -674,40 +726,40 @@ export const useAIDrawingBookLogic = () => {
           }
           
           const generatedBase64 = await blobToBase64(imageBlob);
+          
+          // Update the existing history item instead of creating a new one
           setHistory((prev) => {
-            const newHistory = [
-              ...prev,
-              {
-                sketch: base64ImageData,
-                generated: generatedBase64,
-                recognizedImage: sketchDescription,
-                prompt: currentPrompt,
-                story: "",
-              },
-            ];
-            // Set selectedHistoryIndex to the new item BEFORE drawing to canvas
-            const newIndex = newHistory.length > 5 ? 4 : newHistory.length - 1;
-            setSelectedHistoryIndex(newIndex);
-            // Draw the generated image to coloring canvas immediately
-            setTimeout(() => {
-              const canvas = coloringCanvasRef.current;
-              if (canvas) {
-                resizeColoringCanvas();
-                const ctx = canvas.getContext("2d");
-                if (ctx) {
-                  const genImg = new window.Image();
-                  genImg.onload = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(genImg, 0, 0, canvas.width, canvas.height);
-                  };
-                  genImg.src = "data:image/png;base64," + generatedBase64;
-                }
+            return prev.map((item, idx) => {
+              if (idx === historyIdx) {
+                return {
+                  ...item,
+                  generated: generatedBase64,
+                  // Keep other properties like story and storyImageBase64
+                };
               }
-            }, 0);
-            return newHistory.length > 5
-              ? newHistory.slice(newHistory.length - 5)
-              : newHistory;
+              return item;
+            });
           });
+          
+          // Keep the same selected index since we're updating the existing item
+          setSelectedHistoryIndex(historyIdx);
+          
+          // Draw the generated image to coloring canvas immediately
+          setTimeout(() => {
+            const canvas = coloringCanvasRef.current;
+            if (canvas) {
+              resizeColoringCanvas();
+              const ctx = canvas.getContext("2d");
+              if (ctx) {
+                const genImg = new window.Image();
+                genImg.onload = () => {
+                  ctx.clearRect(0, 0, canvas.width, canvas.height);
+                  ctx.drawImage(genImg, 0, 0, canvas.width, canvas.height);
+                };
+                genImg.src = "data:image/png;base64," + generatedBase64;
+              }
+            }
+          }, 0);
           setShowStorySection(true);
           URL.revokeObjectURL(imageUrl);
         };
@@ -1510,10 +1562,6 @@ const generateAndDownloadVideo = useCallback(async () => {
     handleWebcamCapture,
     handleWebcamCancel,
     
-    // Pen tool handlers
-    handleColoringMouseMove,
-    handleColoringMouseUp,
-
     // Story section toggle
     setShowStorySection,
   };
