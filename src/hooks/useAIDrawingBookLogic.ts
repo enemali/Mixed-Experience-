@@ -1342,7 +1342,7 @@ const generateAndDownloadVideo = useCallback(async () => {
       handleClearAll();
       setSelectedHistoryIndex(null);
     } else if (selectedHistoryIndex !== null && idx < selectedHistoryIndex) {
-      setSelectedHistoryIndex(selectedHistoryIndex - 1);
+      setSelectedHistoryIndex(selectedHistoryIndex - 1); 
     }
   };
 
