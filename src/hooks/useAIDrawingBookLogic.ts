@@ -686,7 +686,7 @@ export const useAIDrawingBookLogic = () => {
               },
             ];
             // Set selectedHistoryIndex to the new item BEFORE drawing to canvas
-            const newIndex = newHistory.length > 10 ? 9 : newHistory.length - 1;
+            const newIndex = newHistory.length > 5 ? 4 : newHistory.length - 1;
             setSelectedHistoryIndex(newIndex);
             // Draw the generated image to coloring canvas immediately
             setTimeout(() => {
@@ -704,8 +704,8 @@ export const useAIDrawingBookLogic = () => {
                 }
               }
             }, 0);
-            return newHistory.length > 10
-              ? newHistory.slice(newHistory.length - 10)
+            return newHistory.length > 5
+              ? newHistory.slice(newHistory.length - 5)
               : newHistory;
           });
           setShowStorySection(true);
@@ -757,7 +757,7 @@ export const useAIDrawingBookLogic = () => {
               },
             ];
             // Set selectedHistoryIndex to the new item BEFORE drawing to canvas
-            const newIndex = newHistory.length > 10 ? 9 : newHistory.length - 1;
+            const newIndex = newHistory.length > 5 ? 4 : newHistory.length - 1;
             setSelectedHistoryIndex(newIndex);
             // Draw the generated image to coloring canvas immediately
             setTimeout(() => {
@@ -775,8 +775,8 @@ export const useAIDrawingBookLogic = () => {
                 }
               }
             }, 0);
-            return newHistory.length > 10
-              ? newHistory.slice(newHistory.length - 10)
+            return newHistory.length > 5
+              ? newHistory.slice(newHistory.length - 5)
               : newHistory;
           });
           setShowStorySection(true);
@@ -1427,11 +1427,11 @@ const generateAndDownloadVideo = useCallback(async () => {
             story: "",
           },
         ];
-        return newHistory.length > 10
-          ? newHistory.slice(newHistory.length - 10)
+        return newHistory.length > 5
+          ? newHistory.slice(newHistory.length - 5)
           : newHistory;
       });
-      setSelectedHistoryIndex(history.length >= 10 ? 9 : history.length);
+      setSelectedHistoryIndex(history.length >= 5 ? 4 : history.length);
       setShowStorySection(true);
     } catch (err: any) {
       setError(err.message || "Could not process photo.");

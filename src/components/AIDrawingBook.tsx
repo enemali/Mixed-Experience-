@@ -270,11 +270,11 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                         <button
                           onClick={enhanceDrawing}
-                          disabled={isGenerating || history.length >= 10 || showWebcam}
+                          disabled={isGenerating || history.length >= 5 || showWebcam}
                           className="flex items-center justify-center gap-1 px-2 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20"
                           title={
-                            history.length >= 10
-                              ? "Maximum of 10 drawings reached. Delete a thumbnail to create more."
+                            history.length >= 5
+                              ? "Maximum of 5 drawings reached. Delete a thumbnail to create more."
                               : showWebcam
                                 ? "Close camera first"
                                 : undefined
@@ -303,10 +303,10 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     </h4>
 
                     {/* gallery */}
-                    <div className="w-full  justify-between">
+                    {/* <div className="w-full  justify-between">
                       <h3 className="font-bold text-white text-center">Gallery</h3>
-                    </div>
-                    <div className="grid grid-cols-12 gap-1">
+                    </div> */}
+                    <div className="grid grid-cols-5 gap-1">
 
                       {history.length === 0 ? (
                         <div className="col-span-3 text-center text-white/60 py-8">
