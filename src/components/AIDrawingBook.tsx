@@ -359,24 +359,26 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   
                   {/* Story Action Buttons */}
                   <div className="flex items-center">
-                    {/* Create Story Button */}
-                    <button
-                      onClick={generateStory}
-                      disabled={isGeneratingStory || isTypingStory}
-                      className="flex items-center justify-center gap-1 px-3 py-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 text-sm"
-                    >
-                      {isGeneratingStory || isTypingStory ? (
-                        <>
-                          <Loader size={14} className="animate-spin" />
-                          <span className="hidden sm:inline">{isGeneratingStory ? 'Creating...' : 'Writing...'}</span>
-                        </>
-                      ) : (
-                        <>
-                          <Zap size={14} />
-                          <span className="hidden sm:inline">Create Story</span>
-                        </>
-                      )}
-                    </button>
+                    {/* Create Story Button - only show if no story exists for selected item */}
+                    {(!story || (selectedHistoryIndex !== null && history[selectedHistoryIndex] && !history[selectedHistoryIndex].story)) && (
+                      <button
+                        onClick={generateStory}
+                        disabled={isGeneratingStory || isTypingStory}
+                        className="flex items-center justify-center gap-1 px-3 py-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 text-sm"
+                      >
+                        {isGeneratingStory || isTypingStory ? (
+                          <>
+                            <Loader size={14} className="animate-spin" />
+                            <span className="hidden sm:inline">{isGeneratingStory ? 'Creating...' : 'Writing...'}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Zap size={14} />
+                            <span className="hidden sm:inline">Create Story</span>
+                          </>
+                        )}
+                      </button>
+                    )}
 
                     {/* Read Aloud Button */}
                     {!isTypingStory && story && (
