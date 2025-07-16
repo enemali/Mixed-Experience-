@@ -423,6 +423,11 @@ export const useAIDrawingBookLogic = () => {
   ) => {
     if (showWebcam) return; // Prevent drawing when webcam is active
     
+    // Prevent default browser behavior (scrolling) for touch events
+    if (e.type.includes('touch')) {
+      e.preventDefault();
+    }
+    
     const canvas = sketchCanvasRef.current;
     if (!canvas) return;
 
@@ -575,6 +580,11 @@ export const useAIDrawingBookLogic = () => {
   const handleColoringClick = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ) => {
+    // Prevent default browser behavior (scrolling) for touch events
+    if (e.type.includes('touch')) {
+      e.preventDefault();
+    }
+    
     const canvas = coloringCanvasRef.current;
     if (!canvas || !hasGeneratedContent) {
       setError("Please generate a drawing first to color!");
@@ -582,6 +592,9 @@ export const useAIDrawingBookLogic = () => {
     }
     setError(null);
     const { x, y } = getCanvasPos(canvas, e.nativeEvent);
+    
+    // Store current history index to ensure we update the correct item
+    const currentHistoryIndex = selectedHistoryIndex;
     
     if (isPenMode) {
       // Start pen drawing
@@ -613,16 +626,21 @@ export const useAIDrawingBookLogic = () => {
     }
 
     // After coloring, save the current state of the coloring canvas to history
-    if (selectedHistoryIndex !== null && history[selectedHistoryIndex]) {
-      const updatedGeneratedBase64 = canvas.toDataURL("image/png").split(",")[1];
-      setHistory((prev) =>
-        prev.map((item, i) =>
-          i === selectedHistoryIndex
-            ? { ...item, generated: updatedGeneratedBase64 }
-            : item
-        )
-      );
-    }
+    // Use setTimeout to ensure this happens after the current event loop
+    setTimeout(() => {
+      if (currentHistoryIndex !== null && history[currentHistoryIndex]) {
+        if (canvas) {
+          const updatedGeneratedBase64 = canvas.toDataURL("image/png").split(",")[1];
+          setHistory((prev) =>
+            prev.map((item, i) =>
+              i === currentHistoryIndex
+                ? { ...item, generated: updatedGeneratedBase64 }
+                : item
+            )
+          );
+        }
+      }
+    }, 0);
   };
 
   const handleColorSelect = (color: string, e: React.MouseEvent) => {

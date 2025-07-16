@@ -149,7 +149,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
       </header>
 
       {/* Main Container */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-6 px-6 pt-2 pb-6 max-w-full overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row gap-6 px-6 pt-2 pb-2 max-w-full overflow-hidden">
         {/* Center Panel - Main Canvas Area */}
         <div className="flex-1 flex flex-col gap-2 min-w-0">
 
@@ -213,8 +213,8 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                   <canvas
                     ref={sketchCanvasRef}
-                    className={`w-full h-full rounded-2xl cursor-crosshair transition-opacity duration-300 ${showWebcam ? 'opacity-0 pointer-events-none' : 'opacity-100'
-                      }`}
+                    className={`w-full h-full rounded-2xl cursor-crosshair transition-opacity duration-300 ${showWebcam ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                    style={{ touchAction: 'none' }} // Add this line
                     onMouseDown={startDrawing}
                     onMouseMove={drawSketch}
                     onMouseUp={stopDrawing}
@@ -470,12 +470,12 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                   <canvas
                     ref={coloringCanvasRef}
-                    className={`w-full h-full rounded-2xl transition-opacity duration-1000 ${hasGeneratedContent ? "block cursor-crosshair" : "hidden"
-                      }`}
+                    className={`w-full h-full rounded-2xl transition-opacity duration-1000 ${hasGeneratedContent ? "block cursor-crosshair" : "hidden"}`}
                     style={{
                       opacity: showStoryImage ? 0 : 1,
                       zIndex: 10,
                       position: "relative",
+                      touchAction: 'none'
                     }}
                     onMouseDown={handleColoringClick}
                     onMouseMove={handleColoringMouseMove}
@@ -484,19 +484,20 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     onTouchStart={handleColoringClick}
                     onTouchMove={handleColoringMouseMove}
                     onTouchEnd={handleColoringMouseUp}
+                    onTouchCancel={handleColoringMouseUp} // Add this line
                   />
 
                 {/* Story Section Overlay */}
                 {showStorySection && (
-                  <div className="absolute top-4 left-4 right-4 z-40 flex items-center justify-center p-4 rounded-2xl bg-black/70 min-h-32"> 
-                    <div className="flex gap-4 w-full max-w-2xl">
+                  <div className="absolute top-0 left-0 right-0 z-40 flex items-center justify-center p-1 rounded-2xl bg-black/70 min-h-8"> 
+                    <div className="flex gap-1 w-full max-w-2xl">
                       {/* Drawn Image on the Left */}
-                      <div className="flex-shrink-0 w-32 h-32">
+                      <div className="flex-shrink-0 w-16 h-16">
                         {selectedHistoryIndex !== null && history[selectedHistoryIndex] && (
                           <img
                             src={`data:image/png;base64,${history[selectedHistoryIndex].sketch}`}
                             alt="Your Drawing"
-                            className="w-full h-full object-cover rounded-xl border-2 border-white/30 shadow-lg"
+                            className="w-full h-full object-cover rounded-xl border-2 border-red-500 shadow-lg"
                           />
                         )}
                       </div>
