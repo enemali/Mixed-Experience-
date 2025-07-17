@@ -117,6 +117,18 @@ const LibraryPage = ({ onSelectBook, onBack }: LibraryPageProps) => {
     // Check if Supabase is configured before attempting to load books
     if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
       setBooks([]);
+      
+      // Check if Supabase is properly configured
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        throw new Error('Supabase configuration missing. Please check your environment variables.');
+      }
+      
+      // Validate Supabase URL format
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      if (!supabaseUrl.includes('supabase.co') && !supabaseUrl.includes('localhost')) {
+        throw new Error('Invalid Supabase URL format. Please check your VITE_SUPABASE_URL environment variable.');
+      }
+      
       setError('Supabase database not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your environment variables to enable database features.');
       setIsLoading(false);
       return;
@@ -156,8 +168,23 @@ const LibraryPage = ({ onSelectBook, onBack }: LibraryPageProps) => {
       if (errorMessage.includes('JWT') || errorMessage.includes('expired') || errorMessage.includes('401')) {
         setError('Your session has expired. Please sign in again to manage books.');
         setCurrentUser(null);
+      console.error('Error loading books:', err);
+      
+      // Provide specific error messages based on the error type
+      let errorMessage = '';
+      if (err instanceof Error) {
+        if (err.message.includes('Failed to fetch')) {
+          errorMessage = 'Unable to connect to the database. Please ensure your Supabase project is running and your network connection is stable. Check that your VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables are correct.';
+        } else if (err.message.includes('configuration missing')) {
+          errorMessage = 'Supabase configuration missing. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env.local file.';
+        } else {
+          errorMessage = `Failed to load books: ${err.message}`;
+        }
       } else {
-        setError(errorMessage);
+        errorMessage = 'Failed to load books: Unknown error occurred';
+      }
+      
+      setError(errorMessage);
       }
     } finally {
       setIsLoading(false);
