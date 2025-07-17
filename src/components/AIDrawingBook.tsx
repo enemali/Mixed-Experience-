@@ -139,7 +139,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
       </header>
 
       {/* Main Container with Sidebar */}
-      <div className="flex-1 flex flex-row gap-1 px-1 max-w-full overflow-hidden">
+      <div className="flex-1 flex flex-row gap-1 px-1/2 max-w-full overflow-hidden">
         
         {/* Left Sidebar */}
         <div className="flex flex-col gap-2 p-1 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 min-w-[160px] max-w-[180px] overflow-y-auto">
