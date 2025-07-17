@@ -149,7 +149,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             <h3 className="text-white font-bold text-sm text-center mb-3">Navigation</h3>
             <button
               onClick={onBack}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white/20 backdrop-blur-sm rounded-2xl shadow-lg hover:bg-white/30 transition-all duration-300 transform hover:scale-105 border border-white/30"
+              className="w-full flex items-center justify-center gap-1 px-3 py-2 bg-white/20 backdrop-blur-sm rounded-2xl shadow-lg hover:bg-white/30 transition-all duration-300 transform hover:scale-105 border border-white/30"
             >
               <ArrowLeft size={16} className="text-white" />
               <span className="text-white font-semibold text-sm">Back</span>
