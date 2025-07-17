@@ -34,6 +34,8 @@ interface AIDrawingBookProps {
 const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
   const [showColorPalette, setShowColorPalette] = React.useState(false);
   const [showBrushSlider, setShowBrushSlider] = React.useState(false);
+  const colorButtonRef = React.useRef<HTMLButtonElement>(null);
+  const brushButtonRef = React.useRef<HTMLButtonElement>(null);
 
   const {
     // Refs
@@ -133,7 +135,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-blue-600 flex flex-col overflow-hidden">
       {/* Header */}
       <header className="bg-white/10 backdrop-blur-lg border-b border-white/20 sticky top-0 z-40">
-        <div className="max-w-full mx-auto px-2 py-2">
+        <div className="max-w-full mx-auto px-4 py-2">
           <div className="text-center">
             <h1 className="text-2xl font-black text-white drop-shadow-lg">
               ✨ AI Art Studio
@@ -146,213 +148,287 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
       <div className="flex-1 flex flex-row gap-1 max-w-full overflow-hidden">
         
         {/* Left Sidebar - 1/12 of body width */}
-        <div className="w-1/12 flex flex-col gap-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-y-auto relative">
+        <div className="w-1/12 flex flex-col gap-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-y-auto relative py-2">
           
           {/* Navigation Button */}
-          <div className="p-1">
+          <div className="px-1 mb-2">
             <button
               onClick={onBack}
-              className="w-full aspect-square bg-white/20 backdrop-blur-sm rounded-full shadow-lg hover:bg-white/30 transition-all duration-300 transform hover:scale-105 border border-white/30 flex items-center justify-center"
+              className="w-full aspect-square bg-white/20 backdrop-blur-sm rounded-full shadow-lg hover:bg-white/30 transition-all duration-300 transform hover:scale-105 border border-white/30 flex items-center justify-center group"
               title="Back to Library"
             >
               <ArrowLeft size={16} className="text-white" />
             </button>
+            <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+              Back
+            </div>
           </div>
 
-          {/* Drawing Action Buttons */}
-          <div className="flex flex-col gap-1 p-1">
-            <button
-              onClick={getDrawingIdea}
-              disabled={isGettingIdea}
-              className="w-full aspect-square bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 flex items-center justify-center"
-              title="Get Drawing Idea"
-            >
-              {isGettingIdea ? (
-                <Loader size={16} className="animate-spin" />
-              ) : (
-                <Lightbulb size={16} />
-              )}
-            </button>
-
-            <button
-              onClick={enhanceDrawing}
-              disabled={isGenerating || history.length >= 5 || showWebcam}
-              className="w-full aspect-square bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 flex items-center justify-center"
-              title="AI Magic"
-            >
-              {isGenerating ? (
-                <Loader size={16} className="animate-spin" />
-              ) : (
-                <Wand2 size={16} />
-              )}
-            </button>
-
-            <button
-              onClick={handleClearAll}
-              className="w-full aspect-square bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20 flex items-center justify-center"
-              title="Clear All"
-            >
-              <Trash2 size={16} />
-            </button>
-
-            {showStorySection && (
-              <button
-                onClick={() => setShowWebcam(true)}
-                disabled={showWebcam}
-                className="w-full aspect-square bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed border border-white/30 flex items-center justify-center"
-                title="Take Photo"
-              >
-                <Camera size={16} />
-              </button>
-            )}
-          </div>
-
-          {/* Story Action Buttons */}
-          {hasGeneratedContent && (
-            <div className="flex flex-col gap-1 p-1">
-              {(!story || (selectedHistoryIndex !== null && history[selectedHistoryIndex] && !history[selectedHistoryIndex].story)) && (
-                <button
-                  onClick={generateStory}
-                  disabled={isGeneratingStory || isTypingStory}
-                  className="w-full aspect-square bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 flex items-center justify-center"
-                  title="Generate Story"
-                >
-                  {isGeneratingStory || isTypingStory ? (
-                    <Loader size={16} className="animate-spin" />
-                  ) : (
-                    <Zap size={16} />
-                  )}
-                </button>
-              )}
-
-              {!isTypingStory && story && (
-                <button
-                  className="w-full aspect-square bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20 flex items-center justify-center"
-                  onClick={() => handleReadStory('pollinations')}
-                  disabled={isReadingStory}
-                  title="Read Story"
-                >
-                  {isReadingStory ? (
-                    <Loader size={16} className="animate-spin" />
-                  ) : (
-                    <Volume2 size={16} />
-                  )}
-                </button>
-              )}
-
-              {!isTypingStory && story && generatedAudioBlob && (
-                <button
-                  onClick={generateAndDownloadVideo}
-                  disabled={isGeneratingVideo || selectedHistoryIndex === null || ffmpegLoading || !ffmpegLoaded}
-                  className="w-full aspect-square bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 flex items-center justify-center"
-                  title="Generate Video"
-                >
-                  {ffmpegLoading ? (
-                    <Loader size={16} className="animate-spin" />
-                  ) : isGeneratingVideo ? (
-                    <Loader size={16} className="animate-spin" />
-                  ) : (
-                    <Download size={16} />
-                  )}
-                </button>
-              )}
-
-              {story && (
-                <button
-                  onClick={() => setShowStorySection(!showStorySection)}
-                  className="w-full aspect-square bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-105 border border-white/30 flex items-center justify-center"
-                  title="Toggle Story"
-                >
-                  <BookOpen size={16} />
-                </button>
-              )}
+          {/* Drawing Actions Group */}
+          <div className="px-1 mb-3">
+            <div className="text-white text-xs text-center mb-2 opacity-0 lg:opacity-100 font-semibold">
+              Drawing
             </div>
-          )}
-
-          {/* Drawing Tool Buttons */}
-          {hasGeneratedContent && (
-            <div className="flex flex-col gap-1 p-1">
-              {/* Pen Tool Toggle */}
-              <button
-                onClick={togglePenMode}
-                disabled={!hasGeneratedContent}
-                className={`w-full aspect-square rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg border flex items-center justify-center ${isPenMode
-                    ? 'bg-purple-500/80 text-white border-white/30'
-                    : 'bg-white/20 text-white hover:bg-white/30 border-white/20'
-                  }`}
-                title={isPenMode ? 'Switch to Fill Tool' : 'Switch to Pen Tool'}
-              >
-                {isPenMode ? (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2h12v11H4V4z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </button>
-
-              {/* Brush Size Button */}
-              {isPenMode && (
+            <div className="flex flex-col gap-1">
+              <div className="flex flex-col items-center">
                 <button
-                  onClick={() => setShowBrushSlider(!showBrushSlider)}
-                  className="w-full aspect-square bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-105 border border-white/30 flex items-center justify-center"
-                  title="Brush Size"
+                  onClick={getDrawingIdea}
+                  disabled={isGettingIdea}
+                  className="w-full aspect-square bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 flex items-center justify-center"
+                  title="Get Drawing Idea"
                 >
-                  <Settings size={16} />
+                  {isGettingIdea ? (
+                    <Loader size={16} className="animate-spin" />
+                  ) : (
+                    <Lightbulb size={16} />
+                  )}
                 </button>
-              )}
+                <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                  Idea
+                </div>
+              </div>
 
-              {/* Color Palette Button */}
-              <button
-                onClick={() => setShowColorPalette(!showColorPalette)}
-                className="w-full aspect-square rounded-full border-2 border-white/30 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
-                style={{ backgroundColor: selectedColor }}
-                title="Color Palette"
-              >
-                <Palette size={16} className="text-white drop-shadow-lg" />
-              </button>
-            </div>
-          )}
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={enhanceDrawing}
+                  disabled={isGenerating || history.length >= 5 || showWebcam}
+                  className="w-full aspect-square bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 flex items-center justify-center"
+                  title="AI Magic"
+                >
+                  {isGenerating ? (
+                    <Loader size={16} className="animate-spin" />
+                  ) : (
+                    <Wand2 size={16} />
+                  )}
+                </button>
+                <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                  Magic
+                </div>
+              </div>
 
-          {/* Color Palette Overlay */}
-          {showColorPalette && (
-            <div className="absolute left-full top-0 ml-1 bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 p-2 z-50">
-              <div className="flex flex-col gap-1">
-                {colors.map((color, index) => (
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={handleClearAll}
+                  className="w-full aspect-square bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20 flex items-center justify-center"
+                  title="Clear All"
+                >
+                  <Trash2 size={16} />
+                </button>
+                <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                  Clear
+                </div>
+              </div>
+
+              {showStorySection && (
+                <div className="flex flex-col items-center">
                   <button
-                    key={index}
-                    onClick={(e) => {
-                      handleColorSelect(color, e);
-                      setShowColorPalette(false);
-                    }}
-                    disabled={!hasGeneratedContent}
-                    className={`w-8 h-8 rounded-full border-2 transition-all duration-300 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${selectedColor === color ? 'border-gray-800 ring-2 ring-gray-400' : 'border-white/50'
-                      }`}
-                    style={{ backgroundColor: color }}
-                    title={`Color: ${color}`}
-                  />
-                ))}
+                    onClick={() => setShowWebcam(true)}
+                    disabled={showWebcam}
+                    className="w-full aspect-square bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed border border-white/30 flex items-center justify-center"
+                    title="Take Photo"
+                  >
+                    <Camera size={16} />
+                  </button>
+                  <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                    Photo
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Story Actions Group */}
+          {hasGeneratedContent && (
+            <div className="px-1 mb-3">
+              <div className="text-white text-xs text-center mb-2 opacity-0 lg:opacity-100 font-semibold">
+                Story
+              </div>
+              <div className="flex flex-col gap-1">
+                {(!story || (selectedHistoryIndex !== null && history[selectedHistoryIndex] && !history[selectedHistoryIndex].story)) && (
+                  <div className="flex flex-col items-center">
+                    <button
+                      onClick={generateStory}
+                      disabled={isGeneratingStory || isTypingStory}
+                      className="w-full aspect-square bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 flex items-center justify-center"
+                      title="Generate Story"
+                    >
+                      {isGeneratingStory || isTypingStory ? (
+                        <Loader size={16} className="animate-spin" />
+                      ) : (
+                        <Zap size={16} />
+                      )}
+                    </button>
+                    <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                      Create
+                    </div>
+                  </div>
+                )}
+
+                {!isTypingStory && story && (
+                  <div className="flex flex-col items-center">
+                    <button
+                      className="w-full aspect-square bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20 flex items-center justify-center"
+                      onClick={() => handleReadStory('pollinations')}
+                      disabled={isReadingStory}
+                      title="Read Story"
+                    >
+                      {isReadingStory ? (
+                        <Loader size={16} className="animate-spin" />
+                      ) : (
+                        <Volume2 size={16} />
+                      )}
+                    </button>
+                    <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                      Read
+                    </div>
+                  </div>
+                )}
+
+                {!isTypingStory && story && generatedAudioBlob && (
+                  <div className="flex flex-col items-center">
+                    <button
+                      onClick={generateAndDownloadVideo}
+                      disabled={isGeneratingVideo || selectedHistoryIndex === null || ffmpegLoading || !ffmpegLoaded}
+                      className="w-full aspect-square bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-white/20 flex items-center justify-center"
+                      title="Generate Video"
+                    >
+                      {ffmpegLoading ? (
+                        <Loader size={16} className="animate-spin" />
+                      ) : isGeneratingVideo ? (
+                        <Loader size={16} className="animate-spin" />
+                      ) : (
+                        <Download size={16} />
+                      )}
+                    </button>
+                    <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                      Video
+                    </div>
+                  </div>
+                )}
+
+                {story && (
+                  <div className="flex flex-col items-center">
+                    <button
+                      onClick={() => setShowStorySection(!showStorySection)}
+                      className="w-full aspect-square bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-105 border border-white/30 flex items-center justify-center"
+                      title="Toggle Story"
+                    >
+                      <BookOpen size={16} />
+                    </button>
+                    <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                      {showStorySection ? 'Hide' : 'Show'}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
 
-          {/* Brush Size Slider Overlay */}
-          {showBrushSlider && isPenMode && (
-            <div className="absolute left-full top-0 ml-1 bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 p-3 z-50">
-              <div className="flex flex-col items-center gap-2">
-                <label className="text-gray-800 text-xs font-medium">Brush Size</label>
-                <input
-                  type="range"
-                  min="2"
-                  max="20"
-                  value={brushSize}
-                  onChange={(e) => setBrushSize(Number(e.target.value))}
-                  className="w-20 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                  style={{ writingMode: 'bt-lr' }}
-                />
-                <div className="text-gray-600 text-xs">{brushSize}px</div>
+          {/* Drawing Tools Group */}
+          {hasGeneratedContent && (
+            <div className="px-1">
+              <div className="text-white text-xs text-center mb-2 opacity-0 lg:opacity-100 font-semibold">
+                Tools
+              </div>
+              <div className="flex flex-col gap-1">
+                <div className="flex flex-col items-center">
+                  <button
+                    onClick={togglePenMode}
+                    disabled={!hasGeneratedContent}
+                    className={`w-full aspect-square rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg border flex items-center justify-center ${isPenMode
+                        ? 'bg-purple-500/80 text-white border-white/30'
+                        : 'bg-white/20 text-white hover:bg-white/30 border-white/20'
+                      }`}
+                    title={isPenMode ? 'Switch to Fill Tool' : 'Switch to Pen Tool'}
+                  >
+                    {isPenMode ? (
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2h12v11H4V4z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                  <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                    {isPenMode ? 'Pen' : 'Fill'}
+                  </div>
+                </div>
+
+                {isPenMode && (
+                  <div className="flex flex-col items-center relative">
+                    <button
+                      ref={brushButtonRef}
+                      onClick={() => setShowBrushSlider(!showBrushSlider)}
+                      className="w-full aspect-square bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-105 border border-white/30 flex items-center justify-center"
+                      title="Brush Size"
+                    >
+                      <Settings size={16} />
+                    </button>
+                    <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                      Size
+                    </div>
+                    
+                    {/* Brush Size Slider - positioned next to button */}
+                    {showBrushSlider && (
+                      <div className="absolute left-full top-0 ml-2 bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 p-3 z-50 transform transition-all duration-300 ease-out animate-in slide-in-from-left-2">
+                        <div className="flex flex-col items-center gap-2">
+                          <label className="text-gray-800 text-xs font-medium">Brush Size</label>
+                          <input
+                            type="range"
+                            min="2"
+                            max="20"
+                            value={brushSize}
+                            onChange={(e) => setBrushSize(Number(e.target.value))}
+                            className="w-20 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                          />
+                          <div className="text-gray-600 text-xs">{brushSize}px</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex flex-col items-center relative">
+                  <button
+                    ref={colorButtonRef}
+                    onClick={() => setShowColorPalette(!showColorPalette)}
+                    className="w-full aspect-square rounded-full border-2 border-white/30 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
+                    style={{ backgroundColor: selectedColor }}
+                    title="Color Palette"
+                  >
+                    <Palette size={16} className="text-white drop-shadow-lg" />
+                  </button>
+                  <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                    Color
+                  </div>
+                  
+                  {/* Color Palette - positioned next to button */}
+                  {showColorPalette && (
+                    <div className="absolute left-full top-0 ml-2 bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 p-3 z-50 transform transition-all duration-300 ease-out animate-in slide-in-from-left-2">
+                      <div className="flex flex-col gap-2">
+                        <h4 className="text-gray-800 text-xs font-medium text-center">Colors</h4>
+                        <div className="flex flex-col gap-1">
+                          {colors.map((color, index) => (
+                            <button
+                              key={index}
+                              onClick={(e) => {
+                                handleColorSelect(color, e);
+                                setShowColorPalette(false);
+                              }}
+                              disabled={!hasGeneratedContent}
+                              className={`w-8 h-8 rounded-full border-2 transition-all duration-300 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${selectedColor === color ? 'border-gray-800 ring-2 ring-gray-400' : 'border-white/50'
+                                }`}
+                              style={{ backgroundColor: color }}
+                              title={`Color: ${color}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
