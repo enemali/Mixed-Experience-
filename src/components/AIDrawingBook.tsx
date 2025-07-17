@@ -145,7 +145,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
         <div className="flex flex-col gap-2 p-1 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 min-w-[160px] max-w-[180px] overflow-y-auto">
           
           {/* Navigation */}
-          <div className="space-y-2">
+          <div className="space-y-6">
             <h3 className="text-white font-bold text-sm text-center mb-3">Navigation</h3>
             <button
               onClick={onBack}
