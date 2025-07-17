@@ -114,6 +114,14 @@ const LibraryPage = ({ onSelectBook, onBack }: LibraryPageProps) => {
   }, [books, searchTerm, selectedSubject, selectedDifficulty]);
 
   const loadBooks = async () => {
+    // Check if Supabase is configured before attempting to load books
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      setBooks([]);
+      setError('Supabase database not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your environment variables to enable database features.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       setIsLoading(true);
       setError(null); // Clear any previous errors
