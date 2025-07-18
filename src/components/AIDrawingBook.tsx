@@ -148,7 +148,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
       <div className="flex-1 flex flex-row gap-1 max-w-full overflow-hidden">
         
         {/* Left Sidebar - 1/12 of body width */}
-        <div className="w-1/12 flex flex-col gap-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-y-auto relative py-2">
+        <div className="w-1/1 flex flex-col bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-y-auto relative py-1">
           
           {/* Navigation Button */}
           <div className="px-1 mb-2">
@@ -157,7 +157,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
               className="w-full aspect-square bg-white/20 backdrop-blur-sm rounded-full shadow-lg hover:bg-white/30 transition-all duration-300 transform hover:scale-105 border border-white/30 flex items-center justify-center group"
               title="Back to Library"
             >
-              <ArrowLeft size={16} className="text-white" />
+              <ArrowLeft size={30} className="text-white" />
             </button>
             <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
               Back
@@ -166,9 +166,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
           {/* Drawing Actions Group */}
           <div className="px-1 mb-3">
-            <div className="text-white text-xs text-center mb-2 opacity-0 lg:opacity-100 font-semibold">
-              Drawing
-            </div>
+            
             <div className="flex flex-col gap-1">
               <div className="flex flex-col items-center">
                 <button
@@ -178,9 +176,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   title="Get Drawing Idea"
                 >
                   {isGettingIdea ? (
-                    <Loader size={16} className="animate-spin" />
+                    <Loader size={30} className="animate-spin" />
                   ) : (
-                    <Lightbulb size={16} />
+                    <Lightbulb size={30} />
                   )}
                 </button>
                 <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
@@ -196,9 +194,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   title="AI Magic"
                 >
                   {isGenerating ? (
-                    <Loader size={16} className="animate-spin" />
+                    <Loader size={30} className="animate-spin" />
                   ) : (
-                    <Wand2 size={16} />
+                    <Wand2 size={30} />
                   )}
                 </button>
                 <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
@@ -212,9 +210,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   className="w-full aspect-square bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20 flex items-center justify-center"
                   title="Clear All"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={30} />
                 </button>
-                <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                <div className="text-white text-xs text-center opacity-0 lg:opacity-100 transition-opacity duration-300">
                   Clear
                 </div>
               </div>
@@ -227,7 +225,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     className="w-full aspect-square bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed border border-white/30 flex items-center justify-center"
                     title="Take Photo"
                   >
-                    <Camera size={16} />
+                    <Camera size={30} />
                   </button>
                   <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
                     Photo
@@ -237,11 +235,11 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
           </div>
 
-          {/* Story Actions Group */}
+          {/* Story Tools Group */}
           {hasGeneratedContent && (
             <div className="px-1 mb-3">
               <div className="text-white text-xs text-center mb-2 opacity-0 lg:opacity-100 font-semibold">
-                Story
+                {/* Story buttons */}
               </div>
               <div className="flex flex-col gap-1">
                 {(!story || (selectedHistoryIndex !== null && history[selectedHistoryIndex] && !history[selectedHistoryIndex].story)) && (
@@ -253,9 +251,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       title="Generate Story"
                     >
                       {isGeneratingStory || isTypingStory ? (
-                        <Loader size={16} className="animate-spin" />
+                        <Loader size={30} className="animate-spin" />
                       ) : (
-                        <Zap size={16} />
+                        <Zap size={30} />
                       )}
                     </button>
                     <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
@@ -273,9 +271,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       title="Read Story"
                     >
                       {isReadingStory ? (
-                        <Loader size={16} className="animate-spin" />
+                        <Loader size={30} className="animate-spin" />
                       ) : (
-                        <Volume2 size={16} />
+                        <Volume2 size={30} />
                       )}
                     </button>
                     <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
@@ -293,11 +291,11 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       title="Generate Video"
                     >
                       {ffmpegLoading ? (
-                        <Loader size={16} className="animate-spin" />
+                        <Loader size={30} className="animate-spin" />
                       ) : isGeneratingVideo ? (
-                        <Loader size={16} className="animate-spin" />
+                        <Loader size={30} className="animate-spin" />
                       ) : (
-                        <Download size={16} />
+                        <Download size={30} />
                       )}
                     </button>
                     <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
@@ -313,7 +311,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       className="w-full aspect-square bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-105 border border-white/30 flex items-center justify-center"
                       title="Toggle Story"
                     >
-                      <BookOpen size={16} />
+                      <BookOpen size={30} />
                     </button>
                     <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
                       {showStorySection ? 'Hide' : 'Show'}
@@ -364,7 +362,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       className="w-full aspect-square bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-105 border border-white/30 flex items-center justify-center"
                       title="Brush Size"
                     >
-                      <Settings size={16} />
+                      <Settings size={30} />
                     </button>
                     <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
                       Size
@@ -398,7 +396,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     style={{ backgroundColor: selectedColor }}
                     title="Color Palette"
                   >
-                    <Palette size={16} className="text-white drop-shadow-lg" />
+                    <Palette size={30} className="text-white drop-shadow-lg" />
                   </button>
                   <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
                     Color
@@ -406,16 +404,16 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   
                   {/* Color Palette - positioned next to button */}
                   {showColorPalette && (
-                    <div className="absolute left-full top-0 ml-2 bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 p-3 z-50 transform transition-all duration-300 ease-out animate-in slide-in-from-left-2">
-                      <div className="flex flex-col gap-2">
-                        <h4 className="text-gray-800 text-xs font-medium text-center">Colors</h4>
+                    <div className="absolute  top-14  bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 z-50 transform transition-all duration-300 ease-out animate-in slide-in-from-left-2">
+                      <div className="flex flex-col gap-1">
+                        {/* <h4 className="text-gray-800 text-xs font-medium text-center">Colors</h4> */}
                         <div className="flex flex-col gap-1">
                           {colors.map((color, index) => (
                             <button
                               key={index}
                               onClick={(e) => {
                                 handleColorSelect(color, e);
-                                setShowColorPalette(false);
+                                // setShowColorPalette(false);
                               }}
                               disabled={!hasGeneratedContent}
                               className={`w-8 h-8 rounded-full border-2 transition-all duration-300 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${selectedColor === color ? 'border-gray-800 ring-2 ring-gray-400' : 'border-white/50'
@@ -441,7 +439,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
           {currentPrompt && (
             <div className="bg-white/10 backdrop-blur-lg rounded-lg p-3 shadow-lg border border-white/20">
               <div className="flex items-center gap-2 mb-1">
-                <Lightbulb size={16} className="text-yellow-300" />
+                <Lightbulb size={30} className="text-yellow-300" />
                 <span className="font-bold text-white text-sm">Drawing Inspiration:</span>
               </div>
               <p className="text-white/90 text-sm leading-relaxed">{currentPrompt}</p>
@@ -464,11 +462,48 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
             {/* Drawing Canvas */}
             <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50 backdrop-blur-sm p-2">
-                <h3 className="text-white font-bold text-sm">Draw Here</h3>
+              <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50 backdrop-blur-sm">
+
+                {/* Gallery */}
+                <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl  border border-white/20">
+                  {/* <h4 className="text-white font-bold text-center  text-sm">Gallery ({history.length}/5)</h4> */}
+                  
+                  <div className="grid grid-cols-5 gap-1">
+                    {history.length === 0 ? (
+                      <div className="col-span-5 text-center text-white/60 py-2">
+                        <span className="text-xs">No drawings yet</span>
+                      </div>
+                    ) : (
+                      history.map((item, index) => (
+                        <div
+                          key={index}
+                          className={`w-18 h-18 relative aspect-square border-2 rounded-lg cursor-pointer overflow-hidden transform transition-all duration-300 hover:scale-105
+                    ${selectedHistoryIndex === index ? 'border-white ring-2 ring-white/50' : 'border-white/30 hover:border-white/50'}`}
+                          onClick={() => handleSelectHistory(index)}
+                        >
+                          <img
+                            src={`data:image/png;base64,${item.generated}`}
+                            alt={`Drawing ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                          <button
+                            onClick={(e) => handleDeleteHistory(index, e)}
+                            className="absolute -top-0.5 -right-0.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-all duration-200 shadow-lg"
+                            title="Delete"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-2 w-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
               </div>
 
-              <div className="p-2">
+              <div className="p-1">
                 <div className="relative aspect-square bg-white/95 rounded-lg overflow-hidden shadow-inner">
 
                   {recognizedImage && (
@@ -512,49 +547,15 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
                 </div>
 
-                {/* Gallery */}
-                <div className="mt-2 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl p-2 border border-white/20">
-                  <h4 className="text-white font-bold text-center mb-2 text-sm">Gallery ({history.length}/5)</h4>
-                  <div className="grid grid-cols-5 gap-1">
-                    {history.length === 0 ? (
-                      <div className="col-span-5 text-center text-white/60 py-4">
-                        <span className="text-xs">No drawings yet</span>
-                      </div>
-                    ) : (
-                      history.map((item, index) => (
-                        <div
-                          key={index}
-                          className={`relative aspect-square border-2 rounded-lg cursor-pointer overflow-hidden transform transition-all duration-300 hover:scale-105
-                    ${selectedHistoryIndex === index ? 'border-white ring-2 ring-white/50' : 'border-white/30 hover:border-white/50'}`}
-                          onClick={() => handleSelectHistory(index)}
-                        >
-                          <img
-                            src={`data:image/png;base64,${item.generated}`}
-                            alt={`Drawing ${index + 1}`}
-                            className="w-full h-full object-cover"
-                          />
-                          <button
-                            onClick={(e) => handleDeleteHistory(index, e)}
-                            className="absolute -top-0.5 -right-0.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-all duration-200 shadow-lg"
-                            title="Delete"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-2 w-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          </button>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
+                
               </div>
             </div>
 
             {/* AI Generated Canvas */}
             <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
-              <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm p-2">
+              <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm">
                 <h3 className="text-white font-bold text-sm flex items-center gap-2">
-                  <Wand2 size={16} />
+                  <Wand2 size={18} />
                   AI Drawing
                 </h3>
               </div>
@@ -595,12 +596,23 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     onTouchCancel={handleColoringMouseUp}
                   />
 
-                  {/* Story Section Overlay */}
+                  {!isGenerating && !hasGeneratedContent && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center text-gray-400">
+                        <Sparkles size={32} className="mx-auto mb-2 opacity-50" />
+                        <p className="font-medium text-sm">AI artwork appears here!</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* Story Section Overlay */}
+              <div>
                   {showStorySection && (
-                    <div className="absolute top-0 left-0 right-0 z-40 flex items-center justify-center p-1 rounded-lg bg-black/70"> 
+                    <div className="absolute z-40 flex items-center justify-center rounded-lg bg-black/70"> 
                       <div className="flex gap-2 w-full max-w-2xl">
                         {/* Drawn Image on the Left */}
-                        <div className="flex-shrink-0 w-12 h-12">
+                        {/* <div className="flex-shrink-0 w-12 h-12">
                           {selectedHistoryIndex !== null && history[selectedHistoryIndex] && (
                             <img
                               src={`data:image/png;base64,${history[selectedHistoryIndex].sketch}`}
@@ -608,12 +620,11 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                               className="w-full h-full object-cover rounded-lg border-2 border-red-500 shadow-lg"
                             />
                           )}
-                        </div>
-                        
+                        </div> */}
                         {/* Story Content on the Right */}
                         <div className="flex-1 min-w-0">
                           {(story || displayedStory) && (
-                            <div className="w-full bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-2">
+                            <div className="w-full bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-1">
                               <div className="text-xs leading-relaxed text-white">
                                 {isTypingStory ? (
                                   <span>
@@ -630,16 +641,6 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       </div>
                     </div>
                   )}
-
-                  {!isGenerating && !hasGeneratedContent && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center text-gray-400">
-                        <Sparkles size={32} className="mx-auto mb-2 opacity-50" />
-                        <p className="font-medium text-sm">AI artwork appears here!</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
           </div>
