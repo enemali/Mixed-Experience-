@@ -471,7 +471,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   <div className="grid grid-cols-5 gap-1">
                     {history.length === 0 ? (
                       <div className="col-span-5 text-center text-white/60 py-2">
-                        <span className="text-xs">No drawings yet</span>
+                        <span className="text-xs">No drawings</span>
                       </div>
                     ) : (
                       history.map((item, index) => (
