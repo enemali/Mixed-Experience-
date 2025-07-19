@@ -487,7 +487,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                           <img
                             src={`data:image/png;base64,${storyImageBase64}`}
                             alt="Story Illustration"
-                            className="w-full h-full object-contain rounded-lg"
+                            className={`w-full h-full object-contain rounded-lg ${showStoryImage ? "slow-fade-animation" : ""}`}
                           />
                         ) : selectedHistoryIndex !== null && history[selectedHistoryIndex] ? (
                           <img
@@ -680,24 +680,10 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 <div className="relative aspect-square bg-white/95 rounded-lg overflow-hidden shadow-inner">
                   <MagicWandAnimation isVisible={isGenerating} />
 
-                  {storyImageBase64 && (
-                    <div
-                      className="absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-1000 z-20"
-                      style={{ opacity: showStoryImage ? 1 : 0 }}
-                    >
-                      <img
-                        src={`data:image/png;base64,${storyImageBase64}`}
-                        alt="Story Illustration"
-                        className={`w-full h-full object-contain rounded-lg ${showStoryImage ? "slow-fade-animation" : ""}`}
-                      />
-                    </div>
-                  )}
-
                   <canvas
                     ref={coloringCanvasRef}
-                    className={`w-full h-full rounded-lg transition-opacity duration-1000 ${hasGeneratedContent ? "block cursor-crosshair" : "hidden"}`}
+                    className={`w-full h-full rounded-lg ${hasGeneratedContent ? "block cursor-crosshair" : "hidden"}`}
                     style={{
-                      opacity: showStoryImage ? 0 : 1,
                       zIndex: 10,
                       position: "relative",
                       touchAction: 'none'
