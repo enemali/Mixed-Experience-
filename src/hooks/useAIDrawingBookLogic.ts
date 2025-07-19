@@ -1557,7 +1557,7 @@ const generateAndDownloadVideo = useCallback(async () => {
       setIsGenerating(true);
       setError(null);
       
-      const sketchCanvas = sketchCanvasRef.current;
+      sketchCanvas = sketchCanvasRef.current;
       if (!sketchCanvas) {
         setError("Could not access drawing canvas.");
         return;
