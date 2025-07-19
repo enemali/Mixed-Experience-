@@ -534,7 +534,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 </div>
               </div>
             </div>
-          </div>
+          
 
           {/* Normal Layout - Hidden when in story mode */}
           <div className={`transition-all duration-700 ease-in-out ${
