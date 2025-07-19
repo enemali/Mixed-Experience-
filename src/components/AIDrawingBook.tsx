@@ -453,15 +453,18 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
         <div className="flex-1 flex flex-col gap-2 min-w-0 relative overflow-hidden">
           
           {/* Story Mode Layout */}
-          {isStoryMode && (
-            <div className="absolute inset-0 z-20 bg-gradient-to-br from-purple-400 via-pink-500 to-blue-600 animate-in slide-in-from-right-4 duration-500">
+          <div className={`absolute inset-0 z-20 bg-gradient-to-br from-purple-400 via-pink-500 to-blue-600 transition-all duration-700 ease-in-out ${
+            isStoryMode 
+              ? 'transform translate-x-0 opacity-100' 
+              : 'transform translate-x-full opacity-0 pointer-events-none'
+          }`}>
               {/* Close Button */}
               <button
                 onClick={handleCloseStoryMode}
-                className="absolute top-4 right-4 z-30 w-10 h-10 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-110 border border-white/30 flex items-center justify-center"
+                className="absolute top-4 right-4 z-30 w-10 h-10 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-110 border border-white/30 flex items-center justify-center group"
                 title="Close Story Mode"
               >
-                <X size={24} />
+                <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
               </button>
 
               <div className="h-full flex gap-4 p-4">
@@ -531,10 +534,14 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Normal Layout - Hidden when in story mode */}
-          <div className={`transition-all duration-500 ${isStoryMode ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+          <div className={`transition-all duration-700 ease-in-out ${
+            isStoryMode 
+              ? 'transform -translate-x-full opacity-0 pointer-events-none' 
+              : 'transform translate-x-0 opacity-100'
+          }`}>
 
           {/* AI Prompt Display */}
           {currentPrompt && (
