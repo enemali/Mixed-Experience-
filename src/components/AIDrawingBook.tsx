@@ -18,6 +18,7 @@ import {
   Download,
   Eye,
   Settings,
+  X,
 } from "lucide-react";
 import { GeminiService } from "../services/GeminiService";
 import { useAIDrawingBookLogic } from "../hooks/useAIDrawingBookLogic";
