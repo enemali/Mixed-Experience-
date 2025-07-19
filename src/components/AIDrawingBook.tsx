@@ -469,7 +469,11 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
 
               <div className="h-full flex gap-4 p-4">
                 {/* AI Generated Image - Left Side */}
-                <div className="w-1/2 flex flex-col">
+                <div className={`w-1/2 flex flex-col transition-all duration-700 ease-in-out ${
+                  isStoryMode 
+                    ? 'transform translate-x-0 opacity-100' 
+                    : 'transform -translate-x-full opacity-0'
+                }`}>
                   <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex-1">
                     <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm p-2 rounded-t-lg">
                       <h3 className="text-white font-bold text-lg flex items-center gap-2">
@@ -502,7 +506,11 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 </div>
 
                 {/* Story Text - Right Side */}
-                <div className="w-1/2 flex flex-col">
+                <div className={`w-1/2 flex flex-col transition-all duration-700 ease-in-out delay-150 ${
+                  isStoryMode 
+                    ? 'transform translate-x-0 opacity-100' 
+                    : 'transform translate-x-full opacity-0'
+                }`}>
                   <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex-1">
                     <div className="bg-gradient-to-r from-orange-500/50 to-pink-500/50 backdrop-blur-sm p-2 rounded-t-lg">
                       <h3 className="text-white font-bold text-lg flex items-center gap-2">
