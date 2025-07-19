@@ -511,9 +511,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
               </button>
 
-              <div className="h-full flex gap-4 p-4">
+              <div className="h-full flex flex-col md:flex-row gap-4 p-4">
                 {/* AI Generated Image - Left Side */}
-                <div className={`w-1/2 flex flex-col transition-all duration-700 ease-in-out ${
+                <div className={`w-full md:w-1/2 flex flex-col transition-all duration-700 ease-in-out ${
                   isStoryMode 
                     ? 'transform translate-x-0 opacity-100' 
                     : 'transform -translate-x-full opacity-0'
@@ -580,7 +580,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 </div>
 
                 {/* Story Text - Right Side */}
-                <div className={`w-1/2 flex flex-col transition-all duration-700 ease-in-out delay-200 ${
+                <div className={`w-full md:w-1/2 flex flex-col transition-all duration-700 ease-in-out delay-200 ${
                   isStoryMode 
                     ? 'transform translate-x-0 opacity-100' 
                     : 'transform translate-x-full opacity-0'
