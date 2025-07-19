@@ -506,7 +506,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 </div>
 
                 {/* Story Text - Right Side */}
-                <div className={`w-1/2 flex flex-col transition-all duration-700 ease-in-out delay-150 ${
+                <div className={`w-1/2 flex flex-col transition-all duration-700 ease-in-out delay-200 ${
                   isStoryMode 
                     ? 'transform translate-x-0 opacity-100' 
                     : 'transform translate-x-full opacity-0'
@@ -518,11 +518,11 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                         {isGeneratingStory ? 'Creating Story...' : isTypingStory ? 'Writing Story...' : isReadingStory ? 'Reading Story...' : 'Your Story'}
                       </h3>
                     </div>
-                    <div className="p-6 flex-1 overflow-y-auto">
+                    <div className="p-6 flex-1 overflow-y-auto transform transition-all duration-500 ease-out">
                       <div className="text-white text-lg leading-relaxed">
                         {/* ----------------------------------- */}
                         {(story || displayedStory) && (
-                            <div className="w-full  rounded-lg border border-white/200 p-1">
+                            <div className="w-full rounded-lg border border-white/20 p-4 transform transition-all duration-300 ease-out">
                               <div className="text-lg leading-relaxed text-white">
                                 {isTypingStory ? (
                                   <span>
