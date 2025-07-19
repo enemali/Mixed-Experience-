@@ -417,6 +417,106 @@ export const useAIDrawingBookLogic = () => {
     return tempCanvas.toDataURL("image/png").split(",")[1];
   }, []);
 
+  // Helper function to get high-resolution cropped sketch
+  const getHighResCroppedSketch = (canvas: HTMLCanvasElement): string => {
+    if (!canvas) return '';
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return '';
+    
+    // Create a high-resolution temporary canvas (minimum 512x512)
+    const highResSize = Math.max(512, canvas.width, canvas.height);
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = highResSize;
+    tempCanvas.height = highResSize;
+    const tempCtx = tempCanvas.getContext('2d');
+    if (!tempCtx) return '';
+    
+    // Fill with white background for better contrast
+    tempCtx.fillStyle = '#FFFFFF';
+    tempCtx.fillRect(0, 0, highResSize, highResSize);
+    
+    // Draw the original canvas content centered and scaled up
+    const scale = highResSize / Math.max(canvas.width, canvas.height);
+    const scaledWidth = canvas.width * scale;
+    const scaledHeight = canvas.height * scale;
+    const offsetX = (highResSize - scaledWidth) / 2;
+    const offsetY = (highResSize - scaledHeight) / 2;
+    
+    tempCtx.drawImage(canvas, offsetX, offsetY, scaledWidth, scaledHeight);
+    
+    // Get image data to find bounding box of non-white pixels
+    const imageData = tempCtx.getImageData(0, 0, highResSize, highResSize);
+    const data = imageData.data;
+    
+    let minX = highResSize, minY = highResSize, maxX = 0, maxY = 0;
+    let hasContent = false;
+    
+    // Find bounding box of drawn content (non-white pixels)
+    for (let y = 0; y < highResSize; y++) {
+      for (let x = 0; x < highResSize; x++) {
+        const index = (y * highResSize + x) * 4;
+        const r = data[index];
+        const g = data[index + 1];
+        const b = data[index + 2];
+        const a = data[index + 3];
+        
+        // Check if pixel is not white and not transparent
+        if (a > 0 && (r < 250 || g < 250 || b < 250)) {
+          hasContent = true;
+          minX = Math.min(minX, x);
+          minY = Math.min(minY, y);
+          maxX = Math.max(maxX, x);
+          maxY = Math.max(maxY, y);
+        }
+      }
+    }
+    
+    // If no content found, return the original canvas
+    if (!hasContent) {
+      return canvas.toDataURL('image/png').split(',')[1];
+    }
+    
+    // Add padding around the content
+    const padding = 20;
+    minX = Math.max(0, minX - padding);
+    minY = Math.max(0, minY - padding);
+    maxX = Math.min(highResSize - 1, maxX + padding);
+    maxY = Math.min(highResSize - 1, maxY + padding);
+    
+    const cropWidth = maxX - minX + 1;
+    const cropHeight = maxY - minY + 1;
+    
+    // Create final canvas with cropped content
+    const finalCanvas = document.createElement('canvas');
+    const finalSize = Math.max(cropWidth, cropHeight, 256); // Minimum 256x256
+    finalCanvas.width = finalSize;
+    finalCanvas.height = finalSize;
+    const finalCtx = finalCanvas.getContext('2d');
+    if (!finalCtx) return canvas.toDataURL('image/png').split(',')[1];
+    
+    // Fill with white background
+    finalCtx.fillStyle = '#FFFFFF';
+    finalCtx.fillRect(0, 0, finalSize, finalSize);
+    
+    // Draw cropped content centered in the final canvas
+    const cropImageData = tempCtx.getImageData(minX, minY, cropWidth, cropHeight);
+    const cropCanvas = document.createElement('canvas');
+    cropCanvas.width = cropWidth;
+    cropCanvas.height = cropHeight;
+    const cropCtx = cropCanvas.getContext('2d');
+    if (cropCtx) {
+      cropCtx.putImageData(cropImageData, 0, 0);
+      
+      // Center the cropped content in the final canvas
+      const finalOffsetX = (finalSize - cropWidth) / 2;
+      const finalOffsetY = (finalSize - cropHeight) / 2;
+      finalCtx.drawImage(cropCanvas, finalOffsetX, finalOffsetY);
+    }
+    
+    return finalCanvas.toDataURL('image/png').split(',')[1];
+  };
+
   // Drawing handlers
   const startDrawing = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
@@ -845,9 +945,7 @@ export const useAIDrawingBookLogic = () => {
                 }
               }
             }, 0);
-            return newHistory.length > 5
-              ? newHistory.slice(newHistory.length - 5)
-              : newHistory;
+            return newHistory;
           });
           setShowStorySection(true);
           URL.revokeObjectURL(imageUrl);
@@ -1436,7 +1534,8 @@ const generateAndDownloadVideo = useCallback(async () => {
       
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       const dataUrl = canvas.toDataURL("image/png");
-      const base64Image = await resizeBase64Image(dataUrl.split(",")[1], 200);
+      const targetSize = Math.max(sketchCanvasRef.current?.width || 512, 512);
+      const base64Image = await resizeBase64Image(dataUrl.split(",")[1], targetSize);
 
       // Close webcam first
       setShowWebcam(false);
@@ -1458,10 +1557,17 @@ const generateAndDownloadVideo = useCallback(async () => {
       setIsGenerating(true);
       setError(null);
       
-      const sketchDescription = await GeminiService.recognizePhoto(base64Image);
-      setRecognizedImage(sketchDescription);
+      const sketchCanvas = sketchCanvasRef.current;
+      if (!sketchCanvas) {
+        setError("Could not access drawing canvas.");
+        return;
+      }
 
-      const imageGenerationPrompt = `A black connected line drawing of: ${sketchDescription} for children's coloring book with no internal colors, on a plain white background.`;
+      const sketchBase64 = getHighResCroppedSketch(sketchCanvas);
+      const recognized = await GeminiService.recognizeImage(sketchBase64);
+      setRecognizedImage(recognized);
+
+      const imageGenerationPrompt = `A black connected line drawing of: ${recognized} for children's coloring book with no internal colors, on a plain white background.`;
       const imageBlob = await PollinationsService.generateImage(imageGenerationPrompt);
       const generatedBase64 = await blobToBase64(imageBlob);
 
@@ -1492,7 +1598,7 @@ const generateAndDownloadVideo = useCallback(async () => {
           {
             sketch: base64Image,
             generated: generatedBase64, // Initial generated image
-            recognizedImage: sketchDescription,
+            recognizedImage: recognized,
             prompt: "[Photo]",
             story: "",
           },
