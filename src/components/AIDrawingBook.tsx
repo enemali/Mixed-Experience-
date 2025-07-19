@@ -509,21 +509,22 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     </div>
                     <div className="p-6 flex-1 overflow-y-auto">
                       <div className="text-white text-lg leading-relaxed">
-                        {isGeneratingStory ? (
-                          <div className="flex items-center justify-center h-full">
-                            <div className="text-center">
-                              <Loader size={48} className="animate-spin mx-auto mb-4 text-white" />
-                              <p className="text-xl">AI is creating your story...</p>
+                        {/* ----------------------------------- */}
+                        {(story || displayedStory) && (
+                            <div className="w-full  rounded-lg border border-white/200 p-1">
+                              <div className="text-lg leading-relaxed text-white">
+                                {isTypingStory ? (
+                                  <span>
+                                    {displayedStory}
+                                    <span className="animate-pulse text-orange-300">|</span>
+                                  </span>
+                                ) : (
+                                  story
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        ) : isTypingStory ? (
-                          <span>
-                            {displayedStory}
-                            <span className="animate-pulse text-orange-300 text-2xl">|</span>
-                          </span>
-                        ) : (
-                          story || 'No story generated yet.'
-                        )}
+                          )}
+                        {/* ----------------------------------- */}
                       </div>
                     </div>
                   </div>
