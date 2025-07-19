@@ -539,7 +539,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                             alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 
                                  currentSlideIndex === 1 ? 'Your Original Drawing' : 
                                  'Story Illustration'}
-                            className="w-full h-full object-contain rounded-lg transition-opacity duration-500"
+                            className={`w-full h-full rounded-lg transition-opacity duration-500 ${
+                              currentSlideIndex === 1 ? 'object-cover' : 'object-contain'
+                            }`}
                             key={currentSlideIndex} // Force re-render for smooth transition
                           />
                         ) : selectedHistoryIndex !== null && history[selectedHistoryIndex] ? (
@@ -548,7 +550,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                             alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 
                                  currentSlideIndex === 1 ? 'Your Original Drawing' : 
                                  'Story Illustration'}
-                            className="w-full h-full object-contain rounded-lg transition-opacity duration-500"
+                            className={`w-full h-full rounded-lg transition-opacity duration-500 ${
+                              currentSlideIndex === 1 ? 'object-cover' : 'object-contain'
+                            }`}
                             key={currentSlideIndex} // Force re-render for smooth transition
                           />
                         ) : (
