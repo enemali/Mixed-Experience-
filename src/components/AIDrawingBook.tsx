@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { GeminiService } from "../services/GeminiService";
 import { useAIDrawingBookLogic } from "../hooks/useAIDrawingBookLogic";
+import React from "react";
 import ColorPalette from "./ColorPalette";
 import HistoryThumbnails from "./HistoryThumbnails";
 import WebcamModal from "./WebcamModal";
@@ -34,6 +35,8 @@ interface AIDrawingBookProps {
 
 const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
   const [showColorPalette, setShowColorPalette] = React.useState(false);
+  const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
+  const slideIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const [showBrushSlider, setShowBrushSlider] = React.useState(false);
   const colorButtonRef = React.useRef<HTMLButtonElement>(null);
   const brushButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -114,6 +117,43 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     setIsStoryMode(shouldShowStoryMode);
   }, [isGeneratingStory, isTypingStory, isReadingStory]);
 
+  // Slideshow logic for cycling through images
+  React.useEffect(() => {
+    if (isStoryMode && selectedHistoryIndex !== null && history[selectedHistoryIndex]) {
+      // Start slideshow
+      slideIntervalRef.current = setInterval(() => {
+        setCurrentSlideIndex(prev => (prev + 1) % 3); // Cycle through 0, 1, 2
+      }, 3000); // Change image every 3 seconds
+
+      return () => {
+        if (slideIntervalRef.current) {
+          clearInterval(slideIntervalRef.current);
+          slideIntervalRef.current = null;
+        }
+      };
+    } else {
+      // Clear slideshow when not in story mode
+      if (slideIntervalRef.current) {
+        clearInterval(slideIntervalRef.current);
+        slideIntervalRef.current = null;
+      }
+      setCurrentSlideIndex(0);
+    }
+  }, [isStoryMode, selectedHistoryIndex, history]);
+
+  // Get current slide image
+  const getCurrentSlideImage = () => {
+    if (selectedHistoryIndex === null || !history[selectedHistoryIndex]) return null;
+    
+    const currentHistory = history[selectedHistoryIndex];
+    switch (currentSlideIndex) {
+      case 0: return currentHistory.generated; // AI enhanced/generated image
+      case 1: return currentHistory.sketch; // Original drawn image
+      case 2: return storyImageBase64 || currentHistory.generated; // Story illustration or fallback to generated
+      default: return currentHistory.generated;
+    }
+  };
+
   const handleCloseStoryMode = () => {
     // Stop any ongoing story reading/generation
     if (isReadingStory) {
@@ -121,6 +161,11 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
       // For now, we'll just close the story mode
     }
     setIsStoryMode(false);
+    // Clear slideshow
+    if (slideIntervalRef.current) {
+      clearInterval(slideIntervalRef.current);
+      slideIntervalRef.current = null;
+    }
   };
 
   // API Key Check UI
@@ -483,23 +528,53 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     </div>
                     <div className="p-4 flex-1 flex items-center justify-center">
                       <div className="relative aspect-square bg-white/95 rounded-lg overflow-hidden shadow-inner max-w-full max-h-full">
+                        {/* Slideshow indicator */}
+                        <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full z-10">
+                          {currentSlideIndex === 0 ? 'AI Enhanced' : 
+                           currentSlideIndex === 1 ? 'Your Drawing' : 
+                           'Story Art'}
+                        </div>
                         {storyImageBase64 ? (
                           <img
-                            src={`data:image/png;base64,${storyImageBase64}`}
-                            alt="Story Illustration"
-                            className={`w-full h-full object-contain rounded-lg ${showStoryImage ? "slow-fade-animation" : ""}`}
+                            src={`data:image/png;base64,${getCurrentSlideImage()}`}
+                            alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 
+                                 currentSlideIndex === 1 ? 'Your Original Drawing' : 
+                                 'Story Illustration'}
+                            className="w-full h-full object-contain rounded-lg transition-opacity duration-500"
+                            key={currentSlideIndex} // Force re-render for smooth transition
                           />
                         ) : selectedHistoryIndex !== null && history[selectedHistoryIndex] ? (
                           <img
-                            src={`data:image/png;base64,${history[selectedHistoryIndex].generated}`}
-                            alt="Generated Art"
-                            className="w-full h-full object-contain rounded-lg"
+                            src={`data:image/png;base64,${getCurrentSlideImage()}`}
+                            alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 
+                                 currentSlideIndex === 1 ? 'Your Original Drawing' : 
+                                 'Story Illustration'}
+                            className="w-full h-full object-contain rounded-lg transition-opacity duration-500"
+                            key={currentSlideIndex} // Force re-render for smooth transition
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-gray-400">
                             <Sparkles size={48} className="opacity-50" />
                           </div>
                         )}
+                        
+                        {/* Slideshow navigation dots */}
+                        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+                          {[0, 1, 2].map((index) => (
+                            <button
+                              key={index}
+                              onClick={() => setCurrentSlideIndex(index)}
+                              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                index === currentSlideIndex 
+                                  ? 'bg-white scale-125' 
+                                  : 'bg-white/50 hover:bg-white/75'
+                              }`}
+                              title={index === 0 ? 'AI Enhanced' : 
+                                     index === 1 ? 'Your Drawing' : 
+                                     'Story Art'}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
