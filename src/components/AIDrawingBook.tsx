@@ -36,6 +36,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
   const [showBrushSlider, setShowBrushSlider] = React.useState(false);
   const colorButtonRef = React.useRef<HTMLButtonElement>(null);
   const brushButtonRef = React.useRef<HTMLButtonElement>(null);
+  const [isStoryMode, setIsStoryMode] = React.useState(false);
 
   const {
     // Refs
@@ -105,6 +106,21 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     handleColoringMouseMove,
     handleColoringMouseUp,
   } = useAIDrawingBookLogic();
+
+  // Track story mode based on story generation/reading states
+  React.useEffect(() => {
+    const shouldShowStoryMode = isGeneratingStory || isTypingStory || isReadingStory;
+    setIsStoryMode(shouldShowStoryMode);
+  }, [isGeneratingStory, isTypingStory, isReadingStory]);
+
+  const handleCloseStoryMode = () => {
+    // Stop any ongoing story reading/generation
+    if (isReadingStory) {
+      // Stop reading story (this would need to be implemented in the hook)
+      // For now, we'll just close the story mode
+    }
+    setIsStoryMode(false);
+  };
 
   // API Key Check UI
   if (!GeminiService.getApiKey()) {
@@ -432,8 +448,91 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
           )}
         </div>
 
-        {/* Right Content Panel */}
-        <div className="flex-1 flex flex-col gap-2 min-w-0">
+        {/* Content Area - Different layouts based on story mode */}
+        <div className="flex-1 flex flex-col gap-2 min-w-0 relative overflow-hidden">
+          
+          {/* Story Mode Layout */}
+          {isStoryMode && (
+            <div className="absolute inset-0 z-20 bg-gradient-to-br from-purple-400 via-pink-500 to-blue-600 animate-in slide-in-from-right-4 duration-500">
+              {/* Close Button */}
+              <button
+                onClick={handleCloseStoryMode}
+                className="absolute top-4 right-4 z-30 w-10 h-10 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-110 border border-white/30 flex items-center justify-center"
+                title="Close Story Mode"
+              >
+                <X size={24} />
+              </button>
+
+              <div className="h-full flex gap-4 p-4">
+                {/* AI Generated Image - Left Side */}
+                <div className="w-1/2 flex flex-col">
+                  <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex-1">
+                    <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm p-2 rounded-t-lg">
+                      <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                        <Wand2 size={20} />
+                        AI Illustration
+                      </h3>
+                    </div>
+                    <div className="p-4 flex-1 flex items-center justify-center">
+                      <div className="relative aspect-square bg-white/95 rounded-lg overflow-hidden shadow-inner max-w-full max-h-full">
+                        {storyImageBase64 ? (
+                          <img
+                            src={`data:image/png;base64,${storyImageBase64}`}
+                            alt="Story Illustration"
+                            className="w-full h-full object-contain rounded-lg"
+                          />
+                        ) : selectedHistoryIndex !== null && history[selectedHistoryIndex] ? (
+                          <img
+                            src={`data:image/png;base64,${history[selectedHistoryIndex].generated}`}
+                            alt="Generated Art"
+                            className="w-full h-full object-contain rounded-lg"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <Sparkles size={48} className="opacity-50" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Story Text - Right Side */}
+                <div className="w-1/2 flex flex-col">
+                  <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex-1">
+                    <div className="bg-gradient-to-r from-orange-500/50 to-pink-500/50 backdrop-blur-sm p-2 rounded-t-lg">
+                      <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                        <BookOpen size={20} />
+                        {isGeneratingStory ? 'Creating Story...' : isTypingStory ? 'Writing Story...' : isReadingStory ? 'Reading Story...' : 'Your Story'}
+                      </h3>
+                    </div>
+                    <div className="p-6 flex-1 overflow-y-auto">
+                      <div className="text-white text-lg leading-relaxed">
+                        {isGeneratingStory ? (
+                          <div className="flex items-center justify-center h-full">
+                            <div className="text-center">
+                              <Loader size={48} className="animate-spin mx-auto mb-4 text-white" />
+                              <p className="text-xl">AI is creating your story...</p>
+                            </div>
+                          </div>
+                        ) : isTypingStory ? (
+                          <span>
+                            {displayedStory}
+                            <span className="animate-pulse text-orange-300 text-2xl">|</span>
+                          </span>
+                        ) : (
+                          story || 'No story generated yet.'
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Normal Layout - Hidden when in story mode */}
+          <div className={`transition-all duration-500 ${isStoryMode ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
 
           {/* AI Prompt Display */}
           {currentPrompt && (
@@ -643,6 +742,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   )}
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
