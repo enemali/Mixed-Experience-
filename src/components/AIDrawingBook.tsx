@@ -661,9 +661,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             {/* Drawing Canvas */}
             <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50 backdrop-blur-sm">
-
                 Draw here
-
               </div>
 
               <div className="p-1">
