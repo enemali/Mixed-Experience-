@@ -605,18 +605,18 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       <div className="text-white text-lg leading-relaxed">
                         {/* ----------------------------------- */}
                         {(story || displayedStory) && (
-                            <div className="w-full rounded-lg border border-white/20 p-4 transform transition-all duration-300 ease-out">
-                              <div className="text-lg leading-relaxed text-white">
-                                {isTypingStory ? (
-                                  <span>
-                                    {displayedStory}
-                                    <span className="animate-pulse text-orange-300">|</span>
-                                  </span>
-                                ) : (
-                                  story
-                                )}
-                              </div>
+                          <div className="w-full rounded-lg border border-white/20 p-4 transform transition-all duration-300 ease-out">
+                            <div className="text-lg leading-relaxed text-white">
+                              {isTypingStory ? (
+                                <span>
+                                  {displayedStory}
+                                  <span className="animate-pulse text-orange-300">|</span>
+                                </span>
+                              ) : (
+                                story
+                              )}
                             </div>
+                          </div>
                           )}
                         {/* ----------------------------------- */}
                       </div>
