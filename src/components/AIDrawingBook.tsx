@@ -121,7 +121,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     if (isStoryMode && selectedHistoryIndex !== null && history[selectedHistoryIndex]) {
       // Start slideshow
       slideIntervalRef.current = setInterval(() => {
-        setCurrentSlideIndex(prev => (prev + 1) % 3); // Cycle through 0, 1, 2
+        setCurrentSlideIndex(prev => (prev + 1) % 2); // Cycle through 0, 1 only
       }, 3000); // Change image every 3 seconds
 
       return () => {
@@ -147,8 +147,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     const currentHistory = history[selectedHistoryIndex];
     switch (currentSlideIndex) {
       case 0: return currentHistory.generated; // AI enhanced/generated image
-      case 1: return currentHistory.sketch; // Original drawn image
-      case 2: return storyImageBase64 || currentHistory.generated; // Story illustration or fallback to generated
+      case 1: return storyImageBase64 || currentHistory.generated; // Painted/story version or fallback
       default: return currentHistory.generated;
     }
   };
@@ -529,25 +528,36 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                       <div className="relative aspect-square bg-white/95 rounded-lg overflow-hidden shadow-inner max-w-full max-h-full">
                         {/* Slideshow indicator */}
                         <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full z-10">
-                          {currentSlideIndex === 0 ? 'AI Enhanced' : 
-                           currentSlideIndex === 1 ? 'Your Drawing' : 
-                           'Story Art'}
+                          {currentSlideIndex === 0 ? 'AI Enhanced' : 'Painted Version'}
                         </div>
+                        
+                        {/* Drawn Image Overlay - Top Left */}
+                        {selectedHistoryIndex !== null && history[selectedHistoryIndex] && (
+                          <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg bg-white">
+                              <img
+                                src={`data:image/png;base64,${history[selectedHistoryIndex].sketch}`}
+                                alt="Your Original Drawing"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="bg-black/70 text-white text-xs px-2 py-1 rounded-md">
+                              Your Drawing
+                            </div>
+                          </div>
+                        )}
+                        
                         {storyImageBase64 ? (
                           <img
                             src={`data:image/png;base64,${getCurrentSlideImage()}`}
-                            alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 
-                                 currentSlideIndex === 1 ? 'Your Original Drawing' : 
-                                 'Story Illustration'}
+                            alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 'Painted Version'}
                             className="w-full h-full object-fill rounded-lg transition-opacity duration-500"
                             key={currentSlideIndex} // Force re-render for smooth transition
                           />
                         ) : selectedHistoryIndex !== null && history[selectedHistoryIndex] ? (
                           <img
                             src={`data:image/png;base64,${getCurrentSlideImage()}`}
-                            alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 
-                                 currentSlideIndex === 1 ? 'Your Original Drawing' : 
-                                 'Story Illustration'}
+                            alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 'Painted Version'}
                             className="w-full h-full object-fill rounded-lg transition-opacity duration-500"
                             key={currentSlideIndex} // Force re-render for smooth transition
                           />
@@ -559,7 +569,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                         
                         {/* Slideshow navigation dots */}
                         <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
-                          {[0, 1, 2].map((index) => (
+                          {[0, 1].map((index) => (
                             <button
                               key={index}
                               onClick={() => setCurrentSlideIndex(index)}
@@ -568,9 +578,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                                   ? 'bg-white scale-125' 
                                   : 'bg-white/50 hover:bg-white/75'
                               }`}
-                              title={index === 0 ? 'AI Enhanced' : 
-                                     index === 1 ? 'Your Drawing' : 
-                                     'Story Art'}
+                              title={index === 0 ? 'AI Enhanced' : 'Painted Version'}
                             />
                           ))}
                         </div>
