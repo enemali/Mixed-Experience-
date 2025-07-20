@@ -8,8 +8,7 @@ import {
   Camera,
   Loader,
   Lightbulb,
-  Play, 
-  Pause,
+  Play,
   Volume2,
   Trash2,
   Plus,
@@ -63,8 +62,6 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
     setShowStorySection,
     error,
     isReadingStory,
-    isGeneratingAudio,
-    isPlayingAudio,
     storyImageBase64,
     showStoryImage,
     history,
@@ -330,19 +327,17 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                     <button
                       className="w-full aspect-square bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20 flex items-center justify-center"
                       onClick={() => handleReadStory('pollinations')}
-                      disabled={isReadingStory || isGeneratingAudio}
+                      disabled={isReadingStory}
                       title="Read Story"
                     >
-                      {isGeneratingAudio ? (
+                      {isReadingStory ? (
                         <Loader size={30} className="animate-spin" />
-                      ) : isPlayingAudio ? (
-                        <Pause size={30} />
                       ) : (
                         <Volume2 size={30} />
                       )}
                     </button>
                     <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
-                      {isGeneratingAudio ? 'Generating...' : isPlayingAudio ? 'Playing' : 'Read'}
+                      Read
                     </div>
                   </div>
                 )}
