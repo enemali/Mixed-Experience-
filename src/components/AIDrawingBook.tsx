@@ -713,7 +713,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
 
             {/* Gallery */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex flex-col p-1">
+            <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex flex-col p-2">
               <div className="text-white text-xs text-center mb-2 font-medium">
                 Gallery ({history.length}/5)
               </div>
