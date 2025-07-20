@@ -656,10 +656,10 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
           )}
 
           {/* Canvas Grid */}
-          <div className="flex gap-1 flex-1">
+          <div className="flex flex-col md:flex-row gap-1 flex-1">
 
             {/* Drawing Canvas */}
-            <div className="flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
+            <div className="flex-1 md:flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50 backdrop-blur-sm">
                 Draw here
               </div>
@@ -713,21 +713,21 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
 
             {/* Gallery */}
-            <div className="w-14 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex flex-col p-1">
-              <div className="text-white text-xs text-center mb-2 font-medium">
+            <div className="w-full h-16 md:w-14 md:h-auto bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex flex-col md:flex-col p-1">
+              <div className="text-white text-xs text-center mb-1 md:mb-2 font-medium">
                 {history.length}/5
               </div>
               
-              <div className="flex flex-col gap-1 items-center flex-1 overflow-y-auto">
+              <div className="flex flex-row md:flex-col gap-1 items-center justify-center md:justify-start flex-1 overflow-x-auto md:overflow-y-auto md:overflow-x-visible">
                 {history.length === 0 ? (
-                  <div className="text-center text-white/60 py-4">
+                  <div className="text-center text-white/60 py-2 md:py-4">
                     <span className="text-xs">No drawings</span>
                   </div>
                 ) : (
                   history.map((item, index) => (
                     <div
                       key={index}
-                      className={`relative w-10 h-10 border rounded-full cursor-pointer overflow-hidden transform transition-all duration-300 hover:scale-110 flex-shrink-0 ${
+                      className={`relative w-10 h-10 md:w-10 md:h-10 border rounded-full cursor-pointer overflow-hidden transform transition-all duration-300 hover:scale-110 flex-shrink-0 ${
                         selectedHistoryIndex === index 
                           ? 'border-white ring-1 ring-white/50 scale-110' 
                           : 'border-white/30 hover:border-white/50'
@@ -756,7 +756,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
 
             {/* AI Generated Canvas */}
-            <div className="flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
+            <div className="flex-1 md:flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm">
                 <h3 className="text-white font-bold text-sm flex items-center gap-2">
                   <Wand2 size={18} />
