@@ -713,6 +713,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
 
             {/* Gallery */}
+            <div className=" ">
             <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex flex-col p-2">
               <div className="text-white text-xs text-center mb-2 font-medium">
                 Gallery ({history.length}/5)
@@ -754,7 +755,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 )}
               </div>
             </div>
-            
+             </div>
             {/* AI Generated Canvas */}
             <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm">
