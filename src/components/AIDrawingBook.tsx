@@ -656,7 +656,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
           )}
 
           {/* Canvas Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-1">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-1 flex-1">
 
             {/* Drawing Canvas */}
             <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
@@ -713,41 +713,47 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
 
             {/* Gallery */}
-                <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl  border border-white/20">
-                  {/* <h4 className="text-white font-bold text-center  text-sm">Gallery ({history.length}/5)</h4> */}
-                  
-                  <div className="grid grid-cols-5 gap-1">
-                    {history.length === 0 ? (
-                      <div className="col-span-5 text-center text-white/60 py-2">
-                        <span className="text-xs">No drawings</span>
-                      </div>
-                    ) : (
-                      history.map((item, index) => (
-                        <div
-                          key={index}
-                          className={`w-18 h-18 relative aspect-square border-2 rounded-lg cursor-pointer overflow-hidden transform transition-all duration-300 hover:scale-105
-                    ${selectedHistoryIndex === index ? 'border-white ring-2 ring-white/50' : 'border-white/30 hover:border-white/50'}`}
-                          onClick={() => handleSelectHistory(index)}
-                        >
-                          <img
-                            src={`data:image/png;base64,${item.generated}`}
-                            alt={`Drawing ${index + 1}`}
-                            className="w-full h-full object-cover"
-                          />
-                          <button
-                            onClick={(e) => handleDeleteHistory(index, e)}
-                            className="absolute -top-0.5 -right-0.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-all duration-200 shadow-lg"
-                            title="Delete"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-2 w-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          </button>
-                        </div>
-                      ))
-                    )}
+            <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex flex-col p-2">
+              <div className="text-white text-xs text-center mb-2 font-medium">
+                Gallery ({history.length}/10)
+              </div>
+              
+              <div className="flex flex-col gap-1 items-center flex-1 overflow-y-auto">
+                {history.length === 0 ? (
+                  <div className="text-center text-white/60 py-4">
+                    <span className="text-xs">No drawings</span>
                   </div>
-                </div> 
+                ) : (
+                  history.map((item, index) => (
+                    <div
+                      key={index}
+                      className={`relative w-10 h-10 border rounded-full cursor-pointer overflow-hidden transform transition-all duration-300 hover:scale-110 flex-shrink-0 ${
+                        selectedHistoryIndex === index 
+                          ? 'border-white ring-1 ring-white/50 scale-110' 
+                          : 'border-white/30 hover:border-white/50'
+                      }`}
+                      onClick={() => handleSelectHistory(index)}
+                      title={`Drawing ${index + 1}`}
+                    >
+                      <img
+                        src={`data:image/png;base64,${item.generated}`}
+                        alt={`Drawing ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        onClick={(e) => handleDeleteHistory(index, e)}
+                        className="absolute -top-0.5 -right-0.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-all duration-200 shadow-lg"
+                        title="Delete"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-2 w-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
             
             {/* AI Generated Canvas */}
             <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
