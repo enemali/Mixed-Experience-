@@ -656,10 +656,10 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
           )}
 
           {/* Canvas Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-1 flex-1">
+          <div className="flex gap-1 flex-1">
 
             {/* Drawing Canvas */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
+            <div className="flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50 backdrop-blur-sm">
                 Draw here
               </div>
@@ -713,10 +713,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
 
             {/* Gallery */}
-            <div >
-            <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex flex-col p-2">
+            <div className="w-14 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex flex-col p-1">
               <div className="text-white text-xs text-center mb-2 font-medium">
-                Gallery ({history.length}/5)
+                {history.length}/5
               </div>
               
               <div className="flex flex-col gap-1 items-center flex-1 overflow-y-auto">
@@ -755,9 +754,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                 )}
               </div>
             </div>
-             </div>
+
             {/* AI Generated Canvas */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
+            <div className="flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm">
                 <h3 className="text-white font-bold text-sm flex items-center gap-2">
                   <Wand2 size={18} />
