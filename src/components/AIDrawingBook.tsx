@@ -465,11 +465,25 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   {/* Color Palette - positioned next to button */}
                   {showColorPalette && (
                     <div className="absolute  top-14  bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 z-50 transform transition-all duration-300 ease-out animate-in slide-in-from-left-2">
-                      <ColorPalette
-                        colors={colors}
-                        selectedColor={selectedColor}
-                        onColorSelect={handleColorSelect}
-                      />
+                      <div className="flex flex-col gap-1">
+                        {/* <h4 className="text-gray-800 text-xs font-medium text-center">Colors</h4> */}
+                        <div className="flex flex-col gap-1">
+                          {colors.map((color, index) => (
+                            <button
+                              key={index}
+                              onClick={(e) => {
+                                handleColorSelect(color, e);
+                                // setShowColorPalette(false);
+                              }}
+                              disabled={!hasGeneratedContent}
+                              className={`w-8 h-8 rounded-full border-2 transition-all duration-300 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${selectedColor === color ? 'border-gray-800 ring-2 ring-gray-400' : 'border-white/50'
+                                }`}
+                              style={{ backgroundColor: color }}
+                              title={`Color: ${color}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -478,40 +492,164 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
           )}
         </div>
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col gap-1 overflow-hidden">
-          {/* Current Prompt Display */}
-          {currentPrompt && (
-            <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 p-2">
-              <div className="flex items-center gap-2">
-                <Lightbulb size={16} className="text-yellow-400 flex-shrink-0" />
-                <p className="text-white text-sm font-medium truncate">
-                  {currentPrompt}
-                </p>
+        {/* Content Area - Different layouts based on story mode */}
+        <div className="flex-1 flex flex-col gap-2 min-w-0 relative overflow-hidden">
+          
+          {/* Story Mode Layout */}
+          <div className={`absolute inset-0 z-20 bg-gradient-to-br from-purple-400 via-pink-500 to-blue-600 transition-all duration-700 ease-in-out ${
+            isStoryMode 
+              ? 'transform translate-x-0 opacity-100' 
+              : 'transform translate-x-full opacity-0 pointer-events-none'
+          }`}>
+              {/* Close Button */}
+              <button
+                onClick={handleCloseStoryMode}
+                className="absolute top-4 right-4 z-30 w-10 h-10 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full transition-all duration-300 transform hover:scale-110 border border-white/30 flex items-center justify-center group"
+                title="Close Story Mode"
+              >
+                <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+              </button>
+
+              <div className="h-full flex gap-4 p-4">
+              <div className="h-full flex flex-col md:flex-row gap-4 p-4">
+                {/* AI Generated Image - Left Side */}
+                <div className={`w-full md:w-1/2 flex flex-col transition-all duration-700 ease-in-out ${
+                  isStoryMode 
+                    ? 'transform translate-x-0 opacity-100' 
+                    : 'transform -translate-x-full opacity-0'
+                }`}>
+                  <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex-1">
+                    <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm p-2 rounded-t-lg">
+                      <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                        <Wand2 size={20} />
+                        AI Illustration
+                      </h3>
+                    </div>
+                    <div className="p-4 flex-1 flex items-center justify-center">
+                      <div className="relative aspect-square bg-white/95 rounded-lg overflow-hidden shadow-inner max-w-full max-h-full">
+                        {/* Slideshow indicator */}
+                        <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full z-10">
+                          {currentSlideIndex === 0 ? 'AI Enhanced' : 'Painted Version'}
+                        </div>
+                        
+                        {/* Drawn Image Overlay - Top Left */}
+                        {selectedHistoryIndex !== null && history[selectedHistoryIndex] && (
+                          <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg bg-white">
+                              <img
+                                src={`data:image/png;base64,${history[selectedHistoryIndex].sketch}`}
+                                alt="Your Original Drawing"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="bg-black/70 text-white text-xs px-2 py-1 rounded-md">
+                              Your Drawing
+                            </div>
+                          </div>
+                        )}
+                        
+                        {storyImageBase64 ? (
+                          <img
+                            src={`data:image/png;base64,${getCurrentSlideImage()}`}
+                            alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 'Painted Version'}
+                            className="w-full h-full object-fill rounded-lg transition-opacity duration-500"
+                            key={currentSlideIndex} // Force re-render for smooth transition
+                          />
+                        ) : selectedHistoryIndex !== null && history[selectedHistoryIndex] ? (
+                          <img
+                            src={`data:image/png;base64,${getCurrentSlideImage()}`}
+                            alt={currentSlideIndex === 0 ? 'AI Enhanced Art' : 'Painted Version'}
+                            className="w-full h-full object-fill rounded-lg transition-opacity duration-500"
+                            key={currentSlideIndex} // Force re-render for smooth transition
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <Sparkles size={48} className="opacity-50" />
+                          </div>
+                        )}
+                        
+                        {/* Slideshow navigation dots */}
+                        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+                          {[0, 1].map((index) => (
+                            <button
+                              key={index}
+                              onClick={() => setCurrentSlideIndex(index)}
+                              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                index === currentSlideIndex 
+                                  ? 'bg-white scale-125' 
+                                  : 'bg-white/50 hover:bg-white/75'
+                              }`}
+                              title={index === 0 ? 'AI Enhanced' : 'Painted Version'}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Story Text - Right Side */}
+                <div className={`w-full md:w-1/2 flex flex-col transition-all duration-700 ease-in-out delay-200 ${
+                  isStoryMode 
+                    ? 'transform translate-x-0 opacity-100' 
+                    : 'transform translate-x-full opacity-0'
+                }`}>
+                  <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 flex-1">
+                    <div className="bg-gradient-to-r from-orange-500/50 to-pink-500/50 backdrop-blur-sm p-2 rounded-t-lg">
+                      <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                        <BookOpen size={20} />
+                        {isGeneratingStory ? 'Creating Story...' : isTypingStory ? 'Writing Story...' : isReadingStory ? 'Reading Story...' : 'Your Story'}
+                      </h3>
+                    </div>
+                    <div className="p-6 flex-1 overflow-y-auto transform transition-all duration-500 ease-out">
+                      <div className="text-white text-lg leading-relaxed">
+                        {/* ----------------------------------- */}
+                        {(story || displayedStory) && (
+                            <div className="w-full rounded-lg border border-white/20 p-4 transform transition-all duration-300 ease-out">
+                              <div className="text-lg leading-relaxed text-white">
+                                {isTypingStory ? (
+                                  <span>
+                                    {displayedStory}
+                                    <span className="animate-pulse text-orange-300">|</span>
+                                  </span>
+                                ) : (
+                                  story
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        {/* ----------------------------------- */}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
+          </div>
+
+          {/* Normal Layout - Hidden when in story mode */}
+          <div className={`transition-all duration-700 ease-in-out ${
+            isStoryMode 
+              ? 'transform -translate-x-full opacity-0 pointer-events-none' 
+              : 'transform translate-x-0 opacity-100'
+          }`}>
+
+          {/* AI Prompt Display */}
+          {currentPrompt && (
+            <div className="bg-white/10 backdrop-blur-lg rounded-lg p-3 shadow-lg border border-white/20">
+              <div className="flex items-center gap-2 mb-1">
+                <Lightbulb size={30} className="text-yellow-300" />
+                <span className="font-bold text-white text-sm">Drawing Inspiration:</span>
+              </div>
+              <p className="text-white/90 text-sm leading-relaxed">{currentPrompt}</p>
             </div>
           )}
 
           {/* Error Display */}
           {error && (
-            <div className="bg-red-500/20 backdrop-blur-lg rounded-lg shadow-2xl border border-red-500/30 p-3">
-              <div className="flex items-start gap-2 text-white">
-                <div className="flex flex-col gap-1">
-                  <div className="flex flex-col items-center relative">
-                    <button
-                      ref={colorButtonRef}
-                      onClick={() => setShowColorPalette(!showColorPalette)}
-                      className="w-full aspect-square rounded-full border-2 border-white/30 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
-                      style={{ backgroundColor: selectedColor }}
-                      title="Color Palette"
-                    >
-                      <Palette size={30} className="text-white drop-shadow-lg" />
-                    </button>
-                    <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
-                      Color
-                    </div>
-                  </div>
-                </div>
+            <div className="bg-red-500/20 backdrop-blur-lg border border-red-400/50 text-red-100 rounded-lg p-3 shadow-lg">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-red-300">⚠️</span>
                 <span className="font-semibold text-sm">Error:</span>
               </div>
               <p className="text-xs">{error}</p>
@@ -524,10 +662,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             {/* Drawing Canvas */}
             <div className="flex-1 md:flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50 backdrop-blur-sm">
-                <h3 className="text-white font-bold text-sm p-2 flex items-center gap-2">
-                  <Palette size={18} />
-                  Draw here
-                </h3>
+                Draw here
               </div>
 
               <div className="p-1">
@@ -622,9 +757,9 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
 
             {/* AI Generated Canvas */}
-            <div className="flex-1 md:flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden relative">
+            <div className="flex-1 md:flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm">
-                <h3 className="text-white font-bold text-sm p-2 flex items-center gap-2">
+                <h3 className="text-white font-bold text-sm flex items-center gap-2">
                   <Wand2 size={18} />
                   AI Drawing
                 </h3>
@@ -662,83 +797,44 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   )}
                 </div>
               </div>
-
-              {/* Color Palette Overlay */}
-              {hasGeneratedContent && (
-                <div className="absolute bottom-2 left-2 right-2 z-20">
-                  <div className="bg-white/90 backdrop-blur-lg rounded-lg shadow-lg border border-white/20 p-2">
-                    <div className="flex items-center justify-center gap-2 overflow-x-auto">
-                      {colors.map((color, index) => (
-                        <button
-                          key={index}
-                          onClick={(e) => handleColorSelect(color, e)}
-                          className={`w-8 h-8 rounded-full border-2 transition-all duration-300 transform hover:scale-110 shadow-lg flex-shrink-0 ${
-                            selectedColor === color 
-                              ? 'border-gray-800 ring-2 ring-gray-400 scale-110' 
-                              : 'border-white/50 hover:border-gray-300'
-                          }`}
-                          style={{ backgroundColor: color }}
-                          title={`Color: ${color}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* Story Section Overlay */}
-              {showStorySection && (
-                <div className="absolute inset-0 z-40 flex flex-col md:flex-row items-center justify-center rounded-lg bg-black/70"> 
-                  <div className="flex flex-col md:flex-row gap-2 w-full max-w-4xl p-4">
-                    {/* Close Button */}
-                    <button
-                      onClick={handleCloseStoryMode}
-                      className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 z-50"
-                      title="Close Story Mode"
-                    >
-                      <X size={16} />
-                    </button>
-
-                    {/* Image Section */}
-                    <div className="w-full md:w-1/2 flex items-center justify-center">
-                      {getCurrentSlideImage() && (
-                        <div className="relative">
-                          <img
-                            src={`data:image/png;base64,${getCurrentSlideImage()}`}
-                            alt="Story illustration"
-                            className="max-w-full max-h-64 md:max-h-80 object-contain rounded-lg border-4 border-white/30 shadow-2xl"
-                          />
-                          
-                          {/* Slide indicator */}
-                          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
-                            <div className={`w-2 h-2 rounded-full ${currentSlideIndex === 0 ? 'bg-white' : 'bg-white/50'}`}></div>
-                            <div className={`w-2 h-2 rounded-full ${currentSlideIndex === 1 ? 'bg-white' : 'bg-white/50'}`}></div>
-                          </div>
+              <div>
+                  {showStorySection && (
+                    <div className="absolute z-40 flex items-center justify-center rounded-lg bg-black/70"> 
+                      <div className="flex gap-2 w-full max-w-2xl">
+                        {/* Drawn Image on the Left */}
+                        {/* <div className="flex-shrink-0 w-12 h-12">
+                          {selectedHistoryIndex !== null && history[selectedHistoryIndex] && (
+                            <img
+                              src={`data:image/png;base64,${history[selectedHistoryIndex].sketch}`}
+                              alt="Your Drawing"
+                              className="w-full h-full object-cover rounded-lg border-2 border-red-500 shadow-lg"
+                            />
+                          )}
+                        </div> */}
+                        {/* Story Content on the Right */}
+                        <div className="flex-1 min-w-0">
+                          {(story || displayedStory) && (
+                            <div className="w-full bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-1">
+                              <div className="text-xs leading-relaxed text-white">
+                                {isTypingStory ? (
+                                  <span>
+                                    {displayedStory}
+                                    <span className="animate-pulse text-orange-300">|</span>
+                                  </span>
+                                ) : (
+                                  story
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      )}
+                      </div>
                     </div>
-
-                    {/* Story Text Section */}
-                    <div className="w-full md:w-1/2 flex items-center justify-center">
-                      {(story || displayedStory) && (
-                        <div className="w-full bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-4 max-h-64 md:max-h-80 overflow-y-auto">
-                          <div className="text-sm md:text-base leading-relaxed text-white">
-                            {isTypingStory ? (
-                              <span>
-                                {displayedStory}
-                                <span className="animate-pulse text-orange-300">|</span>
-                              </span>
-                            ) : (
-                              story
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
+                  )}
+              </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
