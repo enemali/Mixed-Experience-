@@ -687,41 +687,57 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
               )}
 
               {/* Story Section Overlay */}
-              <div>
-                  {showStorySection && (
-                    <div className="absolute inset-0 z-40 flex items-center justify-center rounded-lg bg-black/70"> 
-                      <div className="flex gap-2 w-full max-w-2xl">
-                        {/* Drawn Image on the Left */}
-                        {/* <div className="flex-shrink-0 w-12 h-12">
-                          {selectedHistoryIndex !== null && history[selectedHistoryIndex] && (
-                            <img
-                              src={`data:image/png;base64,${history[selectedHistoryIndex].sketch}`}
-                              alt="Your Drawing"
-                              className="w-full h-full object-cover rounded-lg border-2 border-red-500 shadow-lg"
-                            />
-                          )}
-                        </div> */}
-                        {/* Story Content on the Right */}
-                        <div className="flex-1 min-w-0">
-                          {(story || displayedStory) && (
-                            <div className="w-full bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-1">
-                              <div className="text-xs leading-relaxed text-white">
-                                {isTypingStory ? (
-                                  <span>
-                                    {displayedStory}
-                                    <span className="animate-pulse text-orange-300">|</span>
-                                  </span>
-                                ) : (
-                                  story
-                                )}
-                              </div>
-                            </div>
-                          )}
+              {showStorySection && (
+                <div className="absolute inset-0 z-40 flex flex-col md:flex-row items-center justify-center rounded-lg bg-black/70"> 
+                  <div className="flex flex-col md:flex-row gap-2 w-full max-w-4xl p-4">
+                    {/* Close Button */}
+                    <button
+                      onClick={handleCloseStoryMode}
+                      className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 z-50"
+                      title="Close Story Mode"
+                    >
+                      <X size={16} />
+                    </button>
+
+                    {/* Image Section */}
+                    <div className="w-full md:w-1/2 flex items-center justify-center">
+                      {getCurrentSlideImage() && (
+                        <div className="relative">
+                          <img
+                            src={`data:image/png;base64,${getCurrentSlideImage()}`}
+                            alt="Story illustration"
+                            className="max-w-full max-h-64 md:max-h-80 object-contain rounded-lg border-4 border-white/30 shadow-2xl"
+                          />
+                          
+                          {/* Slide indicator */}
+                          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
+                            <div className={`w-2 h-2 rounded-full ${currentSlideIndex === 0 ? 'bg-white' : 'bg-white/50'}`}></div>
+                            <div className={`w-2 h-2 rounded-full ${currentSlideIndex === 1 ? 'bg-white' : 'bg-white/50'}`}></div>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
-                  )}
-              </div>
+
+                    {/* Story Text Section */}
+                    <div className="w-full md:w-1/2 flex items-center justify-center">
+                      {(story || displayedStory) && (
+                        <div className="w-full bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-4 max-h-64 md:max-h-80 overflow-y-auto">
+                          <div className="text-sm md:text-base leading-relaxed text-white">
+                            {isTypingStory ? (
+                              <span>
+                                {displayedStory}
+                                <span className="animate-pulse text-orange-300">|</span>
+                              </span>
+                            ) : (
+                              story
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
