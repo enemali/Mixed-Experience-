@@ -465,23 +465,53 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   {/* Color Palette - positioned next to button */}
                   {showColorPalette && (
                     <div className="absolute  top-14  bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 z-50 transform transition-all duration-300 ease-out animate-in slide-in-from-left-2">
-                      <div className="flex flex-col gap-1">
-          {/* Color Palette Button */}
-          <div className="flex flex-col items-center relative">
-            <button
-              ref={colorButtonRef}
-              onClick={() => setShowColorPalette(!showColorPalette)}
-              className="w-full aspect-square rounded-full border-2 border-white/30 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
-              style={{ backgroundColor: selectedColor }}
-              title="Color Palette"
-            >
-              <Palette size={30} className="text-white drop-shadow-lg" />
-            </button>
-            <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
-              Color
+                      <ColorPalette
+                        colors={colors}
+                        selectedColor={selectedColor}
+                        onColorSelect={handleColorSelect}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
+
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col gap-1 overflow-hidden">
+          {/* Current Prompt Display */}
+          {currentPrompt && (
+            <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 p-2">
+              <div className="flex items-center gap-2">
+                <Lightbulb size={16} className="text-yellow-400 flex-shrink-0" />
+                <p className="text-white text-sm font-medium truncate">
+                  {currentPrompt}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Error Display */}
+          {error && (
+            <div className="bg-red-500/20 backdrop-blur-lg rounded-lg shadow-2xl border border-red-500/30 p-3">
+              <div className="flex items-start gap-2 text-white">
+                <div className="flex flex-col gap-1">
+                  <div className="flex flex-col items-center relative">
+                    <button
+                      ref={colorButtonRef}
+                      onClick={() => setShowColorPalette(!showColorPalette)}
+                      className="w-full aspect-square rounded-full border-2 border-white/30 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
+                      style={{ backgroundColor: selectedColor }}
+                      title="Color Palette"
+                    >
+                      <Palette size={30} className="text-white drop-shadow-lg" />
+                    </button>
+                    <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+                      Color
+                    </div>
+                  </div>
+                </div>
                 <span className="font-semibold text-sm">Error:</span>
               </div>
               <p className="text-xs">{error}</p>
@@ -494,7 +524,10 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             {/* Drawing Canvas */}
             <div className="flex-1 md:flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
               <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50 backdrop-blur-sm">
-                Draw here
+                <h3 className="text-white font-bold text-sm p-2 flex items-center gap-2">
+                  <Palette size={18} />
+                  Draw here
+                </h3>
               </div>
 
               <div className="p-1">
@@ -591,7 +624,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             {/* AI Generated Canvas */}
             <div className="flex-1 md:flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden relative">
               <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm">
-                <h3 className="text-white font-bold text-sm flex items-center gap-2">
+                <h3 className="text-white font-bold text-sm p-2 flex items-center gap-2">
                   <Wand2 size={18} />
                   AI Drawing
                 </h3>
@@ -656,7 +689,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
               {/* Story Section Overlay */}
               <div>
                   {showStorySection && (
-                    <div className="absolute z-40 flex items-center justify-center rounded-lg bg-black/70"> 
+                    <div className="absolute inset-0 z-40 flex items-center justify-center rounded-lg bg-black/70"> 
                       <div className="flex gap-2 w-full max-w-2xl">
                         {/* Drawn Image on the Left */}
                         {/* <div className="flex-shrink-0 w-12 h-12">
@@ -690,7 +723,6 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   )}
               </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
