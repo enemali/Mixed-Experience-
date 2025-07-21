@@ -466,30 +466,21 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   {showColorPalette && (
                     <div className="absolute  top-14  bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 z-50 transform transition-all duration-300 ease-out animate-in slide-in-from-left-2">
                       <div className="flex flex-col gap-1">
-                        {/* <h4 className="text-gray-800 text-xs font-medium text-center">Colors</h4> */}
-                        <div className="flex flex-col gap-1">
-                          {colors.map((color, index) => (
-                            <button
-                              key={index}
-                              onClick={(e) => {
-                                handleColorSelect(color, e);
-                                // setShowColorPalette(false);
-                              }}
-                              disabled={!hasGeneratedContent}
-                              className={`w-8 h-8 rounded-full border-2 transition-all duration-300 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${selectedColor === color ? 'border-gray-800 ring-2 ring-gray-400' : 'border-white/50'
-                                }`}
-                              style={{ backgroundColor: color }}
-                              title={`Color: ${color}`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+          {/* Color Palette Button */}
+          <div className="flex flex-col items-center relative">
+            <button
+              ref={colorButtonRef}
+              onClick={() => setShowColorPalette(!showColorPalette)}
+              className="w-full aspect-square rounded-full border-2 border-white/30 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
+              style={{ backgroundColor: selectedColor }}
+              title="Color Palette"
+            >
+              <Palette size={30} className="text-white drop-shadow-lg" />
+            </button>
+            <div className="text-white text-xs text-center mt-1 opacity-0 lg:opacity-100 transition-opacity duration-300">
+              Color
             </div>
-          )}
+          </div>
         </div>
 
         {/* Content Area - Different layouts based on story mode */}
@@ -757,7 +748,7 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
             </div>
 
             {/* AI Generated Canvas */}
-            <div className="flex-1 md:flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden">
+            <div className="flex-1 md:flex-1 bg-white/10 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 overflow-hidden relative">
               <div className="bg-gradient-to-r from-green-500/50 to-blue-500/50 backdrop-blur-sm">
                 <h3 className="text-white font-bold text-sm flex items-center gap-2">
                   <Wand2 size={18} />
@@ -797,6 +788,30 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
                   )}
                 </div>
               </div>
+
+              {/* Color Palette Overlay */}
+              {hasGeneratedContent && (
+                <div className="absolute bottom-2 left-2 right-2 z-20">
+                  <div className="bg-white/90 backdrop-blur-lg rounded-lg shadow-lg border border-white/20 p-2">
+                    <div className="flex items-center justify-center gap-2 overflow-x-auto">
+                      {colors.map((color, index) => (
+                        <button
+                          key={index}
+                          onClick={(e) => handleColorSelect(color, e)}
+                          className={`w-8 h-8 rounded-full border-2 transition-all duration-300 transform hover:scale-110 shadow-lg flex-shrink-0 ${
+                            selectedColor === color 
+                              ? 'border-gray-800 ring-2 ring-gray-400 scale-110' 
+                              : 'border-white/50 hover:border-gray-300'
+                          }`}
+                          style={{ backgroundColor: color }}
+                          title={`Color: ${color}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Story Section Overlay */}
               <div>
                   {showStorySection && (
