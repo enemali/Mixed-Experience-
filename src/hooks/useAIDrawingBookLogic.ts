@@ -14,6 +14,13 @@ declare global {
   }
 }
 
+interface ArtModeConfig {
+  id: string;
+  label: string;
+  emoji: string;
+  color: string;
+}
+
 interface HistoryItem {
   sketch: string;
   generated: string; // This will now store the potentially colored image
@@ -23,7 +30,7 @@ interface HistoryItem {
   storyImageBase64?: string;
 } 
 
-export const useAIDrawingBookLogic = () => {
+export const useAIDrawingBookLogic = (selectedArtMode: string = 'happy') => {
   // Canvas refs
   const sketchCanvasRef = useRef<HTMLCanvasElement>(null);
   const coloringCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -675,7 +682,7 @@ export const useAIDrawingBookLogic = () => {
     setError(null);
 
     try {
-      const idea = await GeminiService.getDrawingIdea();
+      const idea = await GeminiService.getDrawingIdea(selectedArtMode);
       setCurrentPrompt(idea);
     } catch (err: any) {
       console.error("Error getting idea:", err);

@@ -40,6 +40,19 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
   const colorButtonRef = React.useRef<HTMLButtonElement>(null);
   const brushButtonRef = React.useRef<HTMLButtonElement>(null);
   const [isStoryMode, setIsStoryMode] = React.useState(false);
+  const [selectedArtMode, setSelectedArtMode] = React.useState<string>('happy');
+
+  // Art mode options
+  const artModes = [
+    { id: 'happy', label: 'Happy', emoji: '😊', color: 'from-yellow-400 to-orange-400' },
+    { id: 'scary', label: 'Scary', emoji: '👻', color: 'from-purple-600 to-gray-800' },
+    { id: 'science', label: 'Science', emoji: '🔬', color: 'from-blue-500 to-green-500' },
+    { id: 'moral', label: 'Moral', emoji: '💝', color: 'from-pink-500 to-red-500' },
+    { id: 'health', label: 'Health', emoji: '🏥', color: 'from-green-400 to-teal-500' },
+    { id: 'adventure', label: 'Adventure', emoji: '🗺️', color: 'from-orange-500 to-red-600' },
+    { id: 'nature', label: 'Nature', emoji: '🌿', color: 'from-green-500 to-emerald-600' },
+    { id: 'fantasy', label: 'Fantasy', emoji: '🦄', color: 'from-purple-500 to-pink-500' }
+  ];
 
   const {
     // Refs
@@ -227,6 +240,30 @@ const AIDrawingBook: React.FC<AIDrawingBookProps> = ({ onBack }) => {
           {/* Drawing Actions Group */}
           <div className="px-1 mb-3">
             
+            {/* Art Mode Selector */}
+            <div className="mb-3">
+              <div className="text-white text-xs text-center mb-2 opacity-0 lg:opacity-100 font-semibold">
+                Art Mode
+              </div>
+              <div className="flex flex-col gap-1 max-h-32 overflow-y-auto">
+                {artModes.map((mode) => (
+                  <button
+                    key={mode.id}
+                    onClick={() => setSelectedArtMode(mode.id)}
+                    className={`w-full aspect-square rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 flex flex-col items-center justify-center text-xs font-bold ${
+                      selectedArtMode === mode.id
+                        ? `bg-gradient-to-r ${mode.color} border-white text-white scale-105`
+                        : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                    }`}
+                    title={`${mode.label} Mode`}
+                  >
+                    <span className="text-lg">{mode.emoji}</span>
+                    <span className="text-xs mt-1 opacity-0 lg:opacity-100">{mode.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="flex flex-col gap-1">
               <div className="flex flex-col items-center">
                 <button
