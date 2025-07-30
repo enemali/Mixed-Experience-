@@ -881,7 +881,7 @@ export const useAIDrawingBookLogic = (selectedArtMode: string = 'happy') => {
       history[selectedHistoryIndex].story &&
       history[selectedHistoryIndex].story.trim() !== ""
     ) {
-      setStory(history[selectedHistoryIndex].story);
+      const storyText = await GeminiService.generateStory(currentHistory.recognizedImage, selectedArtMode);
       setStoryImageBase64(history[selectedHistoryIndex].storyImageBase64 || null);
       return;
     }
