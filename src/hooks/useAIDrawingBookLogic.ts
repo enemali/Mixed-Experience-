@@ -884,7 +884,7 @@ export const useAIDrawingBookLogic = (selectedArtMode: string = 'happy') => {
       const storyText = await GeminiService.generateStory(currentHistory.recognizedImage, selectedArtMode);
       setStoryImageBase64(history[selectedHistoryIndex].storyImageBase64 || null);
       return;
-    }
+      const storyText = await GeminiService.generateStory(currentHistory.recognizedImage, selectedArtMode);
 
     if (!recognizedImage) {
       setError("Please generate a drawing first!");

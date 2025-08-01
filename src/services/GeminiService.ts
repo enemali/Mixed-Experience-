@@ -162,10 +162,34 @@ export class GeminiService {
   //   return result.candidates[0].content.parts[0].text.trim();
   // }
 
-  static async generateStory(recognizedImage: string): Promise<string> {
-    const prompt = `Write a very short (2-3 sentences), happy, moral,health warning, simple story for a 3-5 years old child about this:
+  static async generateStory(recognizedImage: string, artMode: string = 'happy'): Promise<string> {
+    // Get mode-specific story modifiers
+    const getModePrompt = (mode: string) => {
+      switch (mode.toLowerCase()) {
+        case 'scary':
+          return 'Write a very short (2-3 sentences), mildly spooky but child-friendly story for a 3-5 years old child about this. Include gentle thrills like friendly ghosts, silly monsters, or magical mysteries. Keep it fun and not truly frightening:';
+        case 'science':
+          return 'Write a very short (2-3 sentences), educational science story for a 3-5 years old child about this. Include simple scientific facts, discovery, or how things work in nature:';
+        case 'moral':
+          return 'Write a very short (2-3 sentences), moral lesson story for a 3-5 years old child about this. Focus on values like kindness, sharing, helping others, or being honest:';
+        case 'health':
+          return 'Write a very short (2-3 sentences), health and wellness story for a 3-5 years old child about this. Include lessons about healthy eating, exercise, hygiene, or staying safe:';
+        case 'adventure':
+          return 'Write a very short (2-3 sentences), exciting adventure story for a 3-5 years old child about this. Include exploration, bravery, and discovering new places:';
+        case 'nature':
+          return 'Write a very short (2-3 sentences), nature and environment story for a 3-5 years old child about this. Focus on plants, animals, caring for the earth, or natural wonders:';
+        case 'fantasy':
+          return 'Write a very short (2-3 sentences), magical fantasy story for a 3-5 years old child about this. Include magic, fairy tale elements, or enchanted creatures:';
+        case 'happy':
+        default:
+          return 'Write a very short (2-3 sentences), happy, joyful story for a 3-5 years old child about this. Focus on fun, friendship, and positive emotions:';
+      }
+    };
+
+    const prompt = `${getModePrompt(artMode)}
     // Recognized Image , trim any words like 'line sketch of' or 'photo of' or drawing of' from the start.
     "${recognizedImage.replace(/^(line sketch of|photo of|drawing of)\s+/i, '')}"`;
+    
     const payload = {
       contents: [{ parts: [{ text: prompt }] }],
     };
