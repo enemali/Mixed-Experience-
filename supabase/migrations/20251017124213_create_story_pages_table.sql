@@ -55,6 +55,11 @@ CREATE TABLE IF NOT EXISTS story_pages (
 
 ALTER TABLE story_pages ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Anyone can read story pages" ON story_pages;
+DROP POLICY IF EXISTS "Authenticated users can update story pages" ON story_pages;
+DROP POLICY IF EXISTS "Authenticated users can insert story pages" ON story_pages;
+
 -- Allow public read access to story pages
 CREATE POLICY "Anyone can read story pages"
   ON story_pages
