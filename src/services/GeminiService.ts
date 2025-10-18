@@ -112,6 +112,14 @@ export class GeminiService {
     return result.candidates[0].content.parts[0].text.trim();
   }
 
+  static async generateDrawingIdeas(artMode: string = 'happy'): Promise<string> {
+    return this.getDrawingIdea();
+  }
+
+  static async analyzeImage(base64ImageData: string): Promise<string> {
+    return this.recognizeImage(base64ImageData);
+  }
+
   static async recognizeImage(base64ImageData: string): Promise<string> {
     const descriptionPrompt = "short subject focus common description only, No colors. No intoductions, child sensitive, child safe, starting with 'line sketch of' E.g: smiling sun, mushroom house with a girl";
     const payload = {
