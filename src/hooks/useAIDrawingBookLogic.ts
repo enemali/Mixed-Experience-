@@ -294,16 +294,29 @@ export const useAIDrawingBookLogic = () => {
         throw new Error('No drawing to enhance');
       }
 
+      console.log('Starting image analysis...');
       // Recognize image
       const description = await GeminiService.analyzeImage(sketchBase64);
+      console.log('Image description:', description);
       setRecognizedImage(description);
 
-      // Enhance with Pollinations
-      const enhancedUrl = await PollinationsService.enhanceDrawing(sketchBase64, 'happy');
+      console.log('Generating enhanced image...');
+      // Enhance with Pollinations (pass description, not base64)
+      const enhancedUrl = await PollinationsService.enhanceDrawing(description, 'happy');
+      console.log('Enhanced URL:', enhancedUrl);
 
       // Load enhanced image onto coloring canvas
       const img = new Image();
+      img.crossOrigin = 'anonymous';
+
+      img.onerror = (error) => {
+        console.error('Image load error:', error);
+        setError('Failed to load generated image. Please try again.');
+        setIsGenerating(false);
+      };
+
       img.onload = () => {
+        console.log('Image loaded successfully');
         if (coloringCanvasRef.current) {
           const ctx = coloringCanvasRef.current.getContext('2d');
           if (ctx) {
@@ -329,15 +342,18 @@ export const useAIDrawingBookLogic = () => {
 
             setSelectedHistoryIndex(history.length);
             setHasGeneratedContent(true);
+            setIsGenerating(false);
+            console.log('Enhancement complete!');
           }
         }
       };
+
       img.src = enhancedUrl;
 
     } catch (err) {
-      setError('Failed to enhance drawing. Please try again.');
-      console.error(err);
-    } finally {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`Failed to enhance drawing: ${errorMessage}`);
+      console.error('Enhancement error:', err);
       setIsGenerating(false);
     }
   }, [getCanvasAsBase64, history.length]);

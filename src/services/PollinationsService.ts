@@ -23,32 +23,35 @@ export class PollinationsService {
     return response.blob();
   }
 
-  static async enhanceDrawing(base64ImageData: string, artMode: string = 'happy'): Promise<string> {
+  static async enhanceDrawing(description: string, artMode: string = 'happy'): Promise<string> {
     const getModePrompt = (mode: string) => {
       switch (mode.toLowerCase()) {
         case 'scary':
-          return 'child-friendly spooky illustration with friendly ghosts or silly monsters, colorful, cute';
+          return 'child-friendly spooky illustration with friendly ghosts or silly monsters, colorful, cute, storybook style';
         case 'science':
-          return 'educational science illustration for children, bright colors, scientific elements';
+          return 'educational science illustration for children, bright colors, scientific elements, storybook style';
         case 'moral':
-          return 'heartwarming illustration about kindness and friendship, gentle, warm colors';
+          return 'heartwarming illustration about kindness and friendship, gentle, warm colors, storybook style';
         case 'health':
-          return 'healthy lifestyle illustration for kids, active, vibrant, happy';
+          return 'healthy lifestyle illustration for kids, active, vibrant, happy, storybook style';
         case 'adventure':
-          return 'exciting adventure illustration, brave characters, colorful landscapes';
+          return 'exciting adventure illustration, brave characters, colorful landscapes, storybook style';
         case 'nature':
-          return 'beautiful nature illustration, plants and animals, peaceful, natural colors';
+          return 'beautiful nature illustration, plants and animals, peaceful, natural colors, storybook style';
         case 'fantasy':
-          return 'magical fantasy illustration, enchanted, whimsical, dreamy colors';
+          return 'magical fantasy illustration, enchanted, whimsical, dreamy colors, storybook style';
         case 'happy':
         default:
-          return 'cheerful, colorful, child-friendly illustration';
+          return 'cheerful, colorful, child-friendly illustration, storybook style';
       }
     };
 
-    const prompt = `Transform this child's drawing into a ${getModePrompt(artMode)}, keeping the original concept but making it polished and beautiful, professional children's book style`;
+    // Clean up the description (remove "line sketch of" prefix if present)
+    const cleanDescription = description.replace(/^(line sketch of|photo of|drawing of)\s+/i, '');
+
+    const prompt = `${cleanDescription}, ${getModePrompt(artMode)}, professional children's book illustration, vibrant colors, whimsical, detailed, high quality`;
     const encodedPrompt = encodeURIComponent(prompt);
-    const url = `${this.BASE_URL}${encodedPrompt}?width=512&height=512&nologo=True&enhance=true`;
+    const url = `${this.BASE_URL}${encodedPrompt}?width=512&height=512&nologo=true&seed=${Date.now()}`;
 
     return url;
   }
