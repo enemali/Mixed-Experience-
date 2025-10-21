@@ -925,23 +925,36 @@ export const useAIDrawingBookLogic = () => {
         audioBlob = await ElevenLabsService.generateTTSAudio(storyText);
         console.log('🎤 Generated audio using ElevenLabs TTS');
       } else {
-        // Use existing Pollinations AI
-        const pollinationsApiKey = import.meta.env.VITE_POLLINATIONS_API_KEY;
-        if (!pollinationsApiKey) {
-          throw new Error('Pollinations AI API key not configured. Please add VITE_POLLINATIONS_API_KEY to your .env file.');
+        // Use Pollinations AI via edge function to avoid CORS and payment issues
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        if (!supabaseUrl || !supabaseAnonKey) {
+          throw new Error('Supabase configuration missing');
         }
 
-        const encodedStory = encodeURIComponent(story);
-        const voice = "alloy";
-        // Add the API key as a query parameter using Bearer token method
-        const url = `https://text.pollinations.ai/'tell a 4 year old kid a moral story about '${encodedStory}?model=openai-audio&voice=${voice}&token=${pollinationsApiKey}`;
-        const response = await fetch(url);
+        const storyText = `Tell a 4 year old kid a moral story about ${story}`;
+        const url = `${supabaseUrl}/functions/v1/generate-audio`;
+
+        console.log('🎤 Requesting audio generation from edge function...');
+
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+          },
+          body: JSON.stringify({ text: storyText })
+        });
+
         if (!response.ok) {
           const errorText = await response.text();
-          throw new Error(`Failed to generate audio from Pollinations AI: ${response.status} ${response.statusText} - ${errorText}`);
+          console.error('Audio generation failed:', errorText);
+          throw new Error(`Failed to generate audio: ${response.status} ${response.statusText}`);
         }
+
         audioBlob = await response.blob();
-        console.log('🎤 Generated audio using Pollinations AI');
+        console.log('🎤 Generated audio using Pollinations AI (via edge function)');
       }
       
       // Store the audio blob for video generation
