@@ -1,10 +1,14 @@
 export class PollinationsService {
-  private static readonly BASE_URL = 'https://image.pollinations.ai/prompt/';
-  private static readonly AUDIO_URL = 'https://text-to-speech.pollinations.ai';
+  private static readonly BASE_URL = 'https://image.pollinations.ai/prompt/{prompt}';
 
   static async generateImage(prompt: string): Promise<Blob> {
+    const apiKey = import.meta.env.VITE_POLLINATIONS_API_KEY;
+    if (!apiKey) {
+      throw new Error('Pollinations API key is required. Please set VITE_POLLINATIONS_API_KEY in your environment variables.');
+    }
+
     const encodedPrompt = encodeURIComponent(prompt);
-    const endpoint = `${this.BASE_URL}${encodedPrompt}?width=600&height=800&seed=42&nologo=True`;
+    const endpoint = `${this.BASE_URL}${encodedPrompt}?width=600&height=800&seed=42&nologo=True&apikey=${apiKey}`;
 
     const response = await fetch(endpoint, {
       method: 'GET',
@@ -17,47 +21,9 @@ export class PollinationsService {
       } catch (jsonError) {
         console.error('Could not parse error response', jsonError);
       }
-      throw new Error(errorMsg);
+      throw new Error(errorMsg); 
     }
 
     return response.blob();
-  }
-
-  static async enhanceDrawing(description: string, artMode: string = 'happy'): Promise<string> {
-    const getModePrompt = (mode: string) => {
-      switch (mode.toLowerCase()) {
-        case 'scary':
-          return 'child-friendly spooky illustration with friendly ghosts or silly monsters, colorful, cute, storybook style';
-        case 'science':
-          return 'educational science illustration for children, bright colors, scientific elements, storybook style';
-        case 'moral':
-          return 'heartwarming illustration about kindness and friendship, gentle, warm colors, storybook style';
-        case 'health':
-          return 'healthy lifestyle illustration for kids, active, vibrant, happy, storybook style';
-        case 'adventure':
-          return 'exciting adventure illustration, brave characters, colorful landscapes, storybook style';
-        case 'nature':
-          return 'beautiful nature illustration, plants and animals, peaceful, natural colors, storybook style';
-        case 'fantasy':
-          return 'magical fantasy illustration, enchanted, whimsical, dreamy colors, storybook style';
-        case 'happy':
-        default:
-          return 'cheerful, colorful, child-friendly illustration, storybook style';
-      }
-    };
-
-    // Clean up the description (remove "line sketch of" prefix if present)
-    const cleanDescription = description.replace(/^(line sketch of|photo of|drawing of)\s+/i, '');
-
-    const prompt = `${cleanDescription}, ${getModePrompt(artMode)}, professional children's book illustration, vibrant colors, whimsical, detailed, high quality`;
-    const encodedPrompt = encodeURIComponent(prompt);
-    const url = `${this.BASE_URL}${encodedPrompt}?width=512&height=512&nologo=true&seed=${Date.now()}`;
-
-    return url;
-  }
-
-  static async generateAudio(text: string): Promise<string> {
-    const encodedText = encodeURIComponent(text);
-    return `${this.AUDIO_URL}?voice=alloy&text=${encodedText}`;
   }
 }
